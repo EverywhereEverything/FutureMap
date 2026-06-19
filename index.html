@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Global Opportunities Map</title>
     
+    <!-- Leaflet CSS laden -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Tailwind CSS laden -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Tailwind-Konfiguration -->
     <script>
         tailwind.config = {
             theme: {
@@ -26,7 +30,16 @@
     </script>
 
     <style>
+        /* Globaler Riegel gegen jegliche Scrollbalken-Artefakte auf Smartphones */
+        html, body { 
+            overflow: hidden !important; 
+            overflow-x: hidden !important;
+            width: 100%;
+            height: 100%;
+        }
+
         #map { height: 100%; width: 100%; z-index: 1; }
+        
         .leaflet-popup-content-wrapper, .leaflet-popup-tip {
             background: #111827 !important;
             color: #f3f4f6 !important;
@@ -42,7 +55,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Apple-grade Inhalt-Animation */
         .tab-pane {
             animation: textFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -51,14 +63,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Die gesetzte Apple-Animationskurve für GPU-Bewegungen */
         .apple-transition {
             transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
     </style>
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans overflow-hidden h-screen w-screen relative">
+<body class="bg-gray-950 text-gray-100 font-sans relative">
 
+    <!-- FLOATING FILTER CONTROL -->
     <div class="absolute top-4 left-1/2 -translate-x-1/2 bg-gray-900/60 backdrop-blur-md p-1 rounded-xl flex gap-1 shadow-[0_10px_30px_rgba(0,0,0,0.4)] z-[1000] w-[90%] max-w-[340px]">
         <button onclick="filterCategory('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition duration-200">
             All
@@ -71,6 +83,7 @@
         </button>
     </div>
 
+    <!-- FLOATING MAP LEGENDE -->
     <div class="absolute bottom-4 left-4 bg-gray-900/50 backdrop-blur-sm p-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] z-[1000] pointer-events-none hidden md:block">
         <div class="space-y-2">
             <div class="flex items-center gap-2.5">
@@ -84,11 +97,15 @@
         </div>
     </div>
 
+    <!-- INTERAKTIVES ADAPTIVE BOTTOM SHEET / SIDEBAR -->
     <div id="sidebar" class="fixed bg-gray-900/95 backdrop-blur-xl z-[1010] apple-transition flex flex-col bottom-0 left-0 w-full h-[90vh] rounded-t-3xl shadow-[0_-20px_40px_rgba(0,0,0,0.6)] md:top-0 md:h-full md:w-[440px] md:rounded-none md:shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)]" style="will-change: transform; transform: translateY(100%);">
         
+        <!-- Touch-Zone für flüssiges Ziehen am Smartphone -->
         <div id="touch-zone" class="w-full shrink-0 select-none cursor-grab active:cursor-grabbing touch-none">
+            <!-- Pull Indicator -->
             <div class="w-10 h-1 bg-gray-700/60 rounded-full mx-auto mt-3 mb-1 md:hidden"></div>
             
+            <!-- Header -->
             <div class="p-6 pt-3 md:pt-6 pb-4 flex justify-between items-start">
                 <div>
                     <h1 class="text-xl font-bold text-white tracking-wide">Future Compass</h1>
@@ -102,19 +119,31 @@
             </div>
         </div>
         
+        <!-- Dynamischer Inhalt -->
         <div id="details-content" class="px-6 pb-6 flex-1 overflow-y-auto no-scrollbar">
-            </div>
+            <!-- Per JS befüllt -->
+        </div>
     </div>
 
+    <!-- VOLLBILD WELTKARTE -->
     <div id="map" class="w-full h-full absolute inset-0"></div>
 
+    <!-- Leaflet JavaScript laden -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
+    <!-- Deine Daten-Datei laden -->
     <script src="locations.js"></script>
 
+    <!-- App-Logik -->
     <script>
         const isMobile = window.innerWidth < 768;
-        const map = L.map('map', { zoomControl: false }).setView([28, isMobile ? 25 : 20], isMobile ? 2 : 3);
+        
+        // RECONFIGURED: zoomControl & attributionControl auf false gesetzt, um die nervige graue Leiste unten zu eliminieren
+        const map = L.map('map', { 
+            zoomControl: false,
+            attributionControl: false 
+        }).setView([28, isMobile ? 25 : 20], isMobile ? 2 : 3);
+        
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -125,7 +154,6 @@
         const detailsContainer = document.getElementById('details-content');
         const touchZone = document.getElementById('touch-zone');
         
-        // CRITICAL FIX: Verhindert, dass Leaflet Touch-Gesten auf der Info-Box abfängt und blockiert
         L.DomEvent.disableClickPropagation(sidebar);
         L.DomEvent.disableScrollPropagation(sidebar);
 
@@ -181,7 +209,6 @@
             }
         }
 
-        // GESTEN-CONTROLLER: Mit passive:false fixiert der Finger das Sheet ohne Browser-Interferenz
         let startY = 0;
         let startTranslateY = 0;
         let isDragging = false;
@@ -196,8 +223,6 @@
 
         touchZone.addEventListener('touchmove', (e) => {
             if (!isDragging || window.innerWidth >= 768) return;
-            
-            // Stoppt das standardmäßige Ruckeln und Bouncen des Smartphone-Browsers
             if (e.cancelable) e.preventDefault(); 
             
             const currentY = e.touches[0].clientY;
@@ -210,7 +235,7 @@
             
             currentTranslateY = newTranslateY;
             sidebar.style.transform = `translateY(${newTranslateY}px)`;
-        }, { passive: false }); // WICHTIG: passive false erlaubt e.preventDefault()
+        }, { passive: false });
 
         touchZone.addEventListener('touchend', (e) => {
             if (!isDragging || window.innerWidth >= 768) return;
@@ -368,7 +393,6 @@
                     const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
                     marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
 
-                    // OPTIMIERT: Reinfliegen komplett deaktiviert, Kamera verschiebt sich nur sanft im optimalen Fokus-Ausschnitt
                     marker.on('click', () => {
                         showDetails(loc);
                         if(window.innerWidth < 768) {
