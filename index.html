@@ -26,88 +26,159 @@
     </script>
 
     <style>
-        #map { height: 100%; width: 100%; }
+        #map { height: 100%; width: 100%; z-index: 1; }
         .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-            background: #1f2937 !important;
+            background: #111827 !important;
             color: #f3f4f6 !important;
-        }
-        .tab-pane {
-            animation: fadeIn 0.25s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(3px); }
-            to { opacity: 1; transform: translateY(0); }
+            font-family: "Plus Jakarta Sans", sans-serif;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+            border: none !important;
         }
         .leaflet-div-icon {
             background: transparent !important;
             border: none !important;
         }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Apple-grade Animationen */
+        .tab-pane {
+            animation: textFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes textFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans overflow-hidden h-screen flex flex-col md:flex-row">
+<body class="bg-gray-950 text-gray-100 font-sans overflow-hidden h-screen w-screen relative">
 
-    <div class="w-full md:w-1/3 min-w-0 md:min-w-[380px] max-w-full md:max-w-[500px] h-[45vh] md:h-full bg-gray-800 border-b md:border-b-0 md:border-r border-gray-700 flex flex-col shadow-2xl z-[1000]">
-        
-        <div class="p-4 md:p-6 pb-3 bg-gray-800/50 backdrop-blur shrink-0">
-            <h1 class="text-lg md:text-xl font-bold text-white tracking-wide">Future Compass 🧭</h1>
-            <p class="text-[11px] text-gray-400 mt-0.5">Exploration map for international career & studies</p>
-        </div>
+    <div class="absolute top-4 left-1/2 -translate-x-1/2 bg-gray-900/60 backdrop-blur-md p-1 rounded-xl flex gap-1 shadow-[0_10px_30px_rgba(0,0,0,0.4)] z-[1000] w-[90%] max-w-[340px]">
+        <button onclick="filterCategory('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition duration-200">
+            All
+        </button>
+        <button onclick="filterCategory('university')" id="btn-university" class="flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
+            Universities
+        </button>
+        <button onclick="filterCategory('career')" id="btn-career" class="flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
+            Careers
+        </button>
+    </div>
 
-        <div class="px-4 md:px-6 pb-4 border-b border-gray-700 flex gap-2 shrink-0">
-            <button onclick="filterCategory('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white border border-blue-500/30 transition shadow-md">
-                All
-            </button>
-            <button onclick="filterCategory('university')" id="btn-university" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-gray-700 text-gray-300 border border-transparent hover:bg-gray-600 transition">
-                🎓 Universities
-            </button>
-            <button onclick="filterCategory('career')" id="btn-career" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-gray-700 text-gray-300 border border-transparent hover:bg-gray-600 transition">
-                💼 Careers
-            </button>
-        </div>
-        
-        <div id="details-content" class="p-4 md:p-6 flex-1 overflow-y-auto">
-            <div class="text-center py-6 md:py-12">
-                <p class="text-2xl md:text-3xl mb-2 md:mb-3">🌍</p>
-                <p class="text-xs md:text-sm text-gray-200 font-medium">Hover over or click a marker on the map to view specific opportunities and requirements.</p>
+    <div class="absolute bottom-4 left-4 bg-gray-900/50 backdrop-blur-sm p-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] z-[1000] pointer-events-none hidden sm:block">
+        <div class="space-y-2">
+            <div class="flex items-center gap-2.5">
+                <div class="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_6px_#3b82f6] border border-gray-950"></div>
+                <span class="text-[10px] text-gray-400 font-medium tracking-wide">Universities</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981] border border-gray-950"></div>
+                <span class="text-[10px] text-gray-400 font-medium tracking-wide">Careers</span>
             </div>
         </div>
     </div>
 
-    <div class="flex-1 h-[55vh] md:h-full relative">
-        <div id="map"></div>
+    <div id="sidebar" class="fixed top-0 left-0 h-full w-full sm:w-[440px] bg-gray-900/95 backdrop-blur-xl z-[1010] transform -translate-x-full transition-transform duration-300 ease-out flex flex-col shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)]">
         
-        <div class="absolute top-3 right-3 bg-gray-950/60 backdrop-blur-sm border border-gray-700/30 p-2 rounded-lg shadow-xl z-[1000] pointer-events-none">
-            <div class="space-y-1.5">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_4px_#3b82f6] border border-gray-950"></div>
-                    <span class="text-[10px] text-gray-300 font-medium tracking-wide">Universities</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_4px_#10b981] border border-gray-950"></div>
-                    <span class="text-[10px] text-gray-300 font-medium tracking-wide">Careers</span>
-                </div>
+        <div class="p-6 pb-4 flex justify-between items-start shrink-0">
+            <div>
+                <h1 class="text-xl font-bold text-white tracking-wide">Future Compass</h1>
+                <p class="text-[11px] text-gray-400 mt-0.5">Exploration hub for international studies</p>
             </div>
+            <button onclick="closeSidebar()" class="text-gray-400 hover:text-white p-1.5 rounded-xl hover:bg-white/5 transition duration-150">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
+        
+        <div id="details-content" class="px-6 pb-6 flex-1 overflow-y-auto no-scrollbar">
+            </div>
     </div>
+
+    <div id="map" class="w-full h-full absolute inset-0"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script src="locations.js"></script>
 
     <script>
-        // 1. Karte initialisieren
         const isMobile = window.innerWidth < 768;
-        const map = L.map('map', { zoomControl: false }).setView([25, isMobile ? 30 : 40], isMobile ? 2 : 3);
+        const map = L.map('map', { zoomControl: false }).setView([28, isMobile ? 25 : 20], isMobile ? 2 : 3);
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-        // 2. Dark Mode Karten-Design laden
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '© OpenStreetMap contributors © CARTO'
         }).addTo(map);
 
+        const sidebar = document.getElementById('sidebar');
         const detailsContainer = document.getElementById('details-content');
         let activeMarkers = [];
         let currentSelectedLocation = null;
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            currentSelectedLocation = null;
+        }
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+        }
+
+        // NEU: Die Apple-grade Text-Strukturierungsmaschine (Parser)
+        function formatTabContent(text, category) {
+            if (!text) return '';
+            
+            // Teilt den Text anhand von Doppel-Absätzen in Abschnitte auf
+            const sections = text.split('\n\n');
+            const accentColor = category === 'university' ? 'text-blue-400' : 'text-emerald-400';
+            const bulletColor = category === 'university' ? 'bg-blue-500' : 'bg-emerald-500';
+            
+            return sections.map(section => {
+                const lines = section.trim().split('\n');
+                if (lines.length === 0 || !lines[0]) return '';
+                
+                // Erste Zeile extrahieren und Emojis für den sauberen Look herausfiltern
+                let title = lines[0].trim();
+                title = title.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDFFF]/g, '').trim();
+                
+                // Restliche Zeilen formatieren
+                const contentLines = lines.slice(1).map(line => {
+                    let formattedLine = line.trim();
+                    
+                    if (formattedLine.startsWith('•')) {
+                        formattedLine = formattedLine.substring(1).trim();
+                        
+                        // Wenn die Zeile einen Doppelpunkt enthält (z.B. "GPA: Mindestens 3.5"), fetten wir den Schlüsselbegriff
+                        if (formattedLine.includes(':')) {
+                            const parts = formattedLine.split(':');
+                            const label = parts[0].trim();
+                            const desc = parts.slice(1).join(':').trim();
+                            return `
+                                <div class="flex items-start gap-2.5 text-gray-300 text-[13px] leading-relaxed">
+                                    <span class="w-1 h-1 rounded-full ${bulletColor} mt-2 shrink-0 block"></span>
+                                    <span><strong class="text-white font-medium">${label}:</strong> ${desc}</span>
+                                </div>`;
+                        }
+                        return `
+                            <div class="flex items-start gap-2.5 text-gray-300 text-[13px] leading-relaxed">
+                                <span class="w-1 h-1 rounded-full ${bulletColor} mt-2 shrink-0 block"></span>
+                                <span>${formattedLine}</span>
+                            </div>`;
+                    }
+                    return `<p class="text-gray-400 text-[12px] pl-3.5 leading-relaxed italic">${formattedLine}</p>`;
+                }).join('');
+                
+                // Gibt die fertige, linienfreie Apple-Strukturkarte zurück
+                return `
+                    <div class="bg-gray-950/30 p-4 rounded-2xl mb-3 last:mb-0 flex flex-col gap-3 shadow-inner">
+                        <h4 class="text-[9px] font-bold uppercase tracking-widest ${accentColor}">${title}</h4>
+                        <div class="flex flex-col gap-2">${contentLines}</div>
+                    </div>
+                `;
+            }).join('');
+        }
 
         function switchTab(tabName) {
             if (!currentSelectedLocation) return;
@@ -118,7 +189,7 @@
             const tabs = ['req', 'proc', 'fund'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab-btn-${t}`);
-                if (btn) btn.className = "flex-1 py-2 rounded-md text-center text-[11px] md:text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150";
+                if (btn) btn.className = "flex-1 py-1.5 rounded-lg text-center text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150";
             });
 
             const activeBtn = document.getElementById(`tab-btn-${tabName}`);
@@ -126,60 +197,59 @@
                 const activeStyle = currentSelectedLocation.category === 'university' 
                     ? 'bg-blue-600 text-white shadow-sm font-semibold' 
                     : 'bg-emerald-600 text-white shadow-sm font-semibold';
-                activeBtn.className = `flex-1 py-2 rounded-md text-center text-[11px] md:text-xs ${activeStyle} transition-all duration-150`;
+                activeBtn.className = `flex-1 py-1.5 rounded-lg text-center text-xs ${activeStyle} transition-all duration-150`;
             }
         }
 
         function showDetails(loc) {
             currentSelectedLocation = loc;
             
-            const badgeColor = loc.category === 'university' ? 'bg-blue-500/20 text-blue-300 border-blue-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
-            const badgeLabel = loc.category === 'university' ? '🎓 University Track' : '💼 Career Pathway';
+            const badgeColor = loc.category === 'university' ? 'bg-blue-500/10 text-blue-400' : 'bg-emerald-500/10 text-emerald-400';
+            const badgeLabel = loc.category === 'university' ? 'University Track' : 'Career Pathway';
             
             const initialActiveTabStyle = loc.category === 'university' 
                 ? 'bg-blue-600 text-white shadow-sm font-semibold' 
                 : 'bg-emerald-600 text-white shadow-sm font-semibold';
 
             detailsContainer.innerHTML = `
-                <div class="flex flex-col h-full">
-                    <span class="inline-block px-2.5 py-1 text-[10px] md:text-xs font-semibold rounded-full border ${badgeColor} self-start mb-2 md:mb-3">
+                <div class="flex flex-col h-full animate-textFadeIn">
+                    <span class="inline-block px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase rounded-md ${badgeColor} self-start mb-3">
                         ${badgeLabel}
                     </span>
                     
-                    <h2 class="text-xl md:text-2xl font-bold text-white mb-0.5 tracking-wide">${loc.name}</h2>
-                    <p class="text-xs md:text-sm text-gray-300 font-medium italic mb-3 md:mb-4">${loc.locationName || ''}</p>
+                    <h2 class="text-xl font-bold text-white tracking-wide leading-tight">${loc.name}</h2>
+                    <p class="text-xs text-gray-400 font-medium mt-0.5 mb-4">${loc.locationName || ''}</p>
                     
-                    <div class="p-3 bg-gray-900/40 rounded-xl border border-gray-700/60 text-[11px] md:text-xs text-gray-300 leading-relaxed mb-4 md:mb-5">
+                    <div class="p-4 bg-gray-950/40 rounded-xl text-xs text-gray-300 leading-relaxed mb-5">
                         ${loc.shortInfo}
                     </div>
                     
-                    <div class="flex bg-gray-900/60 p-1 rounded-lg gap-1 mb-4 md:mb-6 border border-gray-700/40 shrink-0">
-                        <button onclick="switchTab('req')" id="tab-btn-req" class="flex-1 py-1.5 md:py-2 rounded-md text-center text-[11px] md:text-xs ${initialActiveTabStyle} transition-all duration-150">
+                    <div class="flex bg-gray-950/60 p-1 rounded-xl gap-1 mb-4 shrink-0">
+                        <button onclick="switchTab('req')" id="tab-btn-req" class="flex-1 py-1.5 rounded-lg text-center text-xs ${initialActiveTabStyle} transition-all duration-150">
                             Requirements
                         </button>
-                        <button onclick="switchTab('proc')" id="tab-btn-proc" class="flex-1 py-1.5 md:py-2 rounded-md text-center text-[11px] md:text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150">
+                        <button onclick="switchTab('proc')" id="tab-btn-proc" class="flex-1 py-1.5 rounded-lg text-center text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150">
                             Process
                         </button>
-                        <button onclick="switchTab('fund')" id="tab-btn-fund" class="flex-1 py-1.5 md:py-2 rounded-md text-center text-[11px] md:text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150">
-                            Funding & Info
+                        <button onclick="switchTab('fund')" id="tab-btn-fund" class="flex-1 py-1.5 rounded-lg text-center text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150">
+                            Funding
                         </button>
                     </div>
 
-                    <div id="tab-content-req" class="tab-pane text-xs md:text-sm text-gray-100 whitespace-pre-line leading-relaxed bg-gray-900/10 p-1 rounded-lg">
-                        ${loc.requirements}
+                    <div id="tab-content-req" class="tab-pane p-0.5">
+                        ${formatTabContent(loc.requirements, loc.category)}
                     </div>
-                    <div id="tab-content-proc" class="tab-pane hidden text-xs md:text-sm text-gray-100 whitespace-pre-line leading-relaxed bg-gray-900/10 p-1 rounded-lg">
-                        ${loc.process}
+                    <div id="tab-content-proc" class="tab-pane hidden p-0.5">
+                        ${formatTabContent(loc.process, loc.category)}
                     </div>
-                    <div id="tab-content-fund" class="tab-pane hidden text-xs md:text-sm text-gray-100 whitespace-pre-line leading-relaxed bg-gray-900/10 p-1 rounded-lg">
-                        ${loc.logistics}
+                    <div id="tab-content-fund" class="tab-pane hidden p-0.5">
+                        ${formatTabContent(loc.logistics, loc.category)}
                     </div>
                 </div>
             `;
             
-            if(window.innerWidth < 768) {
-                document.getElementById('details-content').scrollTop = 0;
-            }
+            openSidebar();
+            detailsContainer.scrollTop = 0;
         }
 
         function renderMarkers(filter = 'all') {
@@ -190,13 +260,13 @@
                 if (filter === 'all' || loc.category === filter) {
                     
                     const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
-                    const outerRingColor = loc.category === 'university' ? 'bg-blue-500/30' : 'bg-emerald-500/30';
+                    const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
                     
                     const neonIcon = L.divIcon({
                         html: `
                             <div class="relative w-5 h-5 flex items-center justify-center">
-                                <div class="absolute w-full h-full rounded-full ${outerRingColor} animate-ping" style="animation-duration: 3s;"></div>
-                                <div class="w-2.5 h-2.5 rounded-full ${innerDotColor} border border-gray-900 z-10"></div>
+                                <div class="absolute w-full h-full rounded-full ${outerRingColor} animate-ping" style="animation-duration: 4s;"></div>
+                                <div class="w-2 h-2 rounded-full ${innerDotColor} border border-gray-950 z-10"></div>
                             </div>
                         `,
                         iconSize: [20, 20],
@@ -209,9 +279,9 @@
                     marker.on('click', () => {
                         showDetails(loc);
                         if(window.innerWidth < 768) {
-                            map.panTo([loc.coordinates[0] + 2, loc.coordinates[1]]);
+                            map.panTo([loc.coordinates[0] + 1.5, loc.coordinates[1]]);
                         } else {
-                            map.panTo(loc.coordinates);
+                            map.panTo([loc.coordinates[0], loc.coordinates[1] - 1.5]);
                         }
                     });
 
@@ -222,11 +292,15 @@
 
         function filterCategory(category) {
             renderMarkers(category);
+            closeSidebar();
+            
             const buttons = ['all', 'university', 'career'];
             buttons.forEach(btn => {
-                document.getElementById(`btn-${btn}`).className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-gray-700 text-gray-300 border border-transparent hover:bg-gray-600 transition";
+                document.getElementById(`btn-${btn}`).className = "flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200";
             });
-            document.getElementById(`btn-${category}`).className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white border border-blue-500/30 transition shadow-md";
+            
+            const activeColor = category === 'career' ? 'bg-emerald-600' : 'bg-blue-600';
+            document.getElementById(`btn-${category}`).className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
         }
 
         renderMarkers('all');
