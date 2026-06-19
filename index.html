@@ -154,7 +154,6 @@
             };
         }
 
-        // NEU: Apple-Verriegelung via Display-Schaltung nach der Slidedown-Animation
         function snapToState(state) {
             mobileState = state;
             sidebar.classList.add('apple-transition');
@@ -165,22 +164,27 @@
                 sidebar.style.opacity = '0';
                 sidebar.style.pointerEvents = 'none';
                 sidebar.style.transform = `translateY(120vh)`;
-                
-                // Sobald die Animation durch ist, schalten wir die Box komplett ab
                 setTimeout(() => {
-                    if (mobileState === 'closed') {
-                        sidebar.style.display = 'none';
-                    }
+                    if (mobileState === 'closed') sidebar.style.display = 'none';
                 }, 450);
             } else {
                 sidebar.style.display = 'flex';
-                sidebar.offsetHeight; // Reflow erzwingen
+                sidebar.offsetHeight; 
                 sidebar.style.opacity = '1';
                 sidebar.style.pointerEvents = 'auto';
                 sidebar.style.transform = `translateY(${currentTranslateY}px)`;
             }
         }
 
+        function resetMapView() {
+            const mobileMode = window.innerWidth < 768;
+            map.flyTo([28, mobileMode ? 25 : 20], mobileMode ? 2 : 3, {
+                animate: true,
+                duration: 1.0
+            });
+        }
+
+        // Kamera-Reset wird jetzt hier sauber getriggert
         function closeSidebar() {
             if (window.innerWidth < 768) {
                 snapToState('closed');
@@ -192,11 +196,12 @@
                 }, 450);
             }
             currentSelectedLocation = null;
+            resetMapView(); 
         }
 
         function openSidebar() {
             sidebar.style.display = 'flex';
-            sidebar.offsetHeight; // Reflow erzwingen
+            sidebar.offsetHeight; 
             sidebar.classList.add('apple-transition');
             
             if (window.innerWidth < 768) {
@@ -206,35 +211,60 @@
             }
         }
 
+        // INTELLIGENTES GESTEN-SYSTEM: Hört auf das gesamte Sidebar-Element für maximale Freiheit
         let startY = 0;
         let startTranslateY = 0;
         let isDragging = false;
 
-        touchZone.addEventListener('touchstart', (e) => {
+        sidebar.addEventListener('touchstart', (e) => {
             if (window.innerWidth >= 768 || mobileState === 'closed') return;
-            isDragging = true;
-            sidebar.classList.remove('apple-transition');
-            startY = e.touches[0].clientY;
-            startTranslateY = currentTranslateY;
+            
+            // Überprüfen, ob die Berührung im Textbereich stattgefunden hat
+            const isContentZone = detailsContainer.contains(e.target);
+            
+            // Regel 1: Im mittleren Modus fangen wir JEDEN Wisch ab (kein Feststecken mehr!)
+            // Regel 2: Im Vollbildmodus fangen wir den Textbereich nur ab, wenn der Text ganz oben angekommen ist (scrollTop <= 0)
+            if (mobileState === 'partial' || !isContentZone) {
+                isDragging = true;
+                sidebar.classList.remove('apple-transition');
+                startY = e.touches[0].clientY;
+                startTranslateY = currentTranslateY;
+            } else if (mobileState === 'expanded' && isContentZone && detailsContainer.scrollTop <= 0) {
+                // Wir merken uns den Startpunkt für einen eventuellen Pull-Down, aktivieren Dragging aber erst bei der Richtung im Move-Event
+                isDragging = false;
+                startY = e.touches[0].clientY;
+            }
         }, { passive: true });
 
-        touchZone.addEventListener('touchmove', (e) => {
-            if (!isDragging || window.innerWidth >= 768) return;
-            if (e.cancelable) e.preventDefault(); 
+        sidebar.addEventListener('touchmove', (e) => {
+            if (window.innerWidth >= 768 || mobileState === 'closed') return;
             
             const currentY = e.touches[0].clientY;
-            const deltaY = currentY - startY;
-            let newTranslateY = startTranslateY + deltaY;
-            
-            if (newTranslateY < 0) {
-                newTranslateY = newTranslateY * 0.25; 
+            const deltaY = currentY - startY; // Positiv = nach unten ziehen, Negativ = nach oben ziehen
+            const isContentZone = detailsContainer.contains(e.target);
+
+            // Dynamische Aktivierung: Wenn im Vollbild nach unten gezogen wird UND der Text ganz oben steht -> Panel mitnehmen!
+            if (!isDragging && mobileState === 'expanded' && isContentZone && detailsContainer.scrollTop <= 0 && deltaY > 0) {
+                isDragging = true;
+                sidebar.classList.remove('apple-transition');
+                startTranslateY = getSheetPositions().expanded;
+                startY = currentY; // Sprung im Interface verhindern
             }
-            
-            currentTranslateY = newTranslateY;
-            sidebar.style.transform = `translateY(${newTranslateY}px)`;
+
+            if (isDragging) {
+                if (e.cancelable) e.preventDefault(); // Verhindert das Ruckeln des iOS-Hintergrunds
+                
+                let newTranslateY = startTranslateY + deltaY;
+                if (newTranslateY < 0) {
+                    newTranslateY = newTranslateY * 0.25; // iOS Gummiband-Effekt
+                }
+                
+                currentTranslateY = newTranslateY;
+                sidebar.style.transform = `translateY(${newTranslateY}px)`;
+            }
         }, { passive: false });
 
-        touchZone.addEventListener('touchend', (e) => {
+        sidebar.addEventListener('touchend', (e) => {
             if (!isDragging || window.innerWidth >= 768) return;
             isDragging = false;
             
@@ -251,6 +281,7 @@
             } else {
                 snapToState('closed');
                 currentSelectedLocation = null;
+                resetMapView(); 
             }
         });
 
@@ -389,7 +420,7 @@
                     const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
                     marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
 
-                    // Seidenweiches Zentrieren (panTo) ohne Zoom-Änderung
+                    // Seidenweiches Zentrieren (panTo) ohne erzwungenen Zoomflug
                     marker.on('click', () => {
                         showDetails(loc);
                         if(window.innerWidth < 768) {
