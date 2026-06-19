@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Global Opportunities Map</title>
     
-    <!-- Leaflet CSS laden -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS laden -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Tailwind-Konfiguration -->
     <script>
         tailwind.config = {
             theme: {
@@ -30,7 +26,6 @@
     </script>
 
     <style>
-        /* Globaler Riegel gegen jegliche Scrollbalken-Artefakte auf Smartphones */
         html, body { 
             overflow: hidden !important; 
             overflow-x: hidden !important;
@@ -64,13 +59,12 @@
         }
 
         .apple-transition {
-            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
         }
     </style>
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans relative">
+<body class="bg-gray-950 text-gray-100 font-sans relative w-full h-full">
 
-    <!-- FLOATING FILTER CONTROL -->
     <div class="absolute top-4 left-1/2 -translate-x-1/2 bg-gray-900/60 backdrop-blur-md p-1 rounded-xl flex gap-1 shadow-[0_10px_30px_rgba(0,0,0,0.4)] z-[1000] w-[90%] max-w-[340px]">
         <button onclick="filterCategory('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition duration-200">
             All
@@ -83,7 +77,6 @@
         </button>
     </div>
 
-    <!-- FLOATING MAP LEGENDE -->
     <div class="absolute bottom-4 left-4 bg-gray-900/50 backdrop-blur-sm p-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] z-[1000] pointer-events-none hidden md:block">
         <div class="space-y-2">
             <div class="flex items-center gap-2.5">
@@ -97,15 +90,11 @@
         </div>
     </div>
 
-    <!-- INTERAKTIVES ADAPTIVE BOTTOM SHEET / SIDEBAR -->
-    <div id="sidebar" class="fixed bg-gray-900/95 backdrop-blur-xl z-[1010] apple-transition flex flex-col bottom-0 left-0 w-full h-[90vh] rounded-t-3xl shadow-[0_-20px_40px_rgba(0,0,0,0.6)] md:top-0 md:h-full md:w-[440px] md:rounded-none md:shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)]" style="will-change: transform; transform: translateY(100%);">
+    <div id="sidebar" class="fixed bg-gray-900/95 backdrop-blur-xl z-[1010] apple-transition flex flex-col bottom-0 left-0 w-full h-[90vh] rounded-t-3xl shadow-[0_-20px_40px_rgba(0,0,0,0.6)] md:top-0 md:h-full md:w-[440px] md:rounded-none md:shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)]" style="will-change: transform, opacity; display: none;">
         
-        <!-- Touch-Zone für flüssiges Ziehen am Smartphone -->
         <div id="touch-zone" class="w-full shrink-0 select-none cursor-grab active:cursor-grabbing touch-none">
-            <!-- Pull Indicator -->
             <div class="w-10 h-1 bg-gray-700/60 rounded-full mx-auto mt-3 mb-1 md:hidden"></div>
             
-            <!-- Header -->
             <div class="p-6 pt-3 md:pt-6 pb-4 flex justify-between items-start">
                 <div>
                     <h1 class="text-xl font-bold text-white tracking-wide">Future Compass</h1>
@@ -119,26 +108,19 @@
             </div>
         </div>
         
-        <!-- Dynamischer Inhalt -->
         <div id="details-content" class="px-6 pb-6 flex-1 overflow-y-auto no-scrollbar">
-            <!-- Per JS befüllt -->
-        </div>
+            </div>
     </div>
 
-    <!-- VOLLBILD WELTKARTE -->
     <div id="map" class="w-full h-full absolute inset-0"></div>
 
-    <!-- Leaflet JavaScript laden -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <!-- Deine Daten-Datei laden -->
     <script src="locations.js"></script>
 
-    <!-- App-Logik -->
     <script>
         const isMobile = window.innerWidth < 768;
         
-        // RECONFIGURED: zoomControl & attributionControl auf false gesetzt, um die nervige graue Leiste unten zu eliminieren
         const map = L.map('map', { 
             zoomControl: false,
             attributionControl: false 
@@ -161,32 +143,42 @@
         let currentSelectedLocation = null;
         
         let mobileState = 'closed';
-        let currentTranslateY = window.innerHeight;
+        let currentTranslateY = window.innerHeight + 200;
 
         function getSheetPositions() {
             const viewHeight = window.innerHeight;
             return {
                 expanded: 0,
                 partial: viewHeight * 0.35,
-                closed: viewHeight
+                closed: viewHeight + 200
             };
         }
 
+        // NEU: Apple-Verriegelung via Display-Schaltung nach der Slidedown-Animation
         function snapToState(state) {
             mobileState = state;
             sidebar.classList.add('apple-transition');
             const positions = getSheetPositions();
             currentTranslateY = positions[state];
-            sidebar.style.transform = `translateY(${currentTranslateY}px)`;
-        }
-
-        // Automatischer Kamera-Reset beim Schließen der Menüs
-        function resetMapView() {
-            const mobileMode = window.innerWidth < 768;
-            map.flyTo([28, mobileMode ? 25 : 20], mobileMode ? 2 : 3, {
-                animate: true,
-                duration: 1.0
-            });
+            
+            if (state === 'closed') {
+                sidebar.style.opacity = '0';
+                sidebar.style.pointerEvents = 'none';
+                sidebar.style.transform = `translateY(120vh)`;
+                
+                // Sobald die Animation durch ist, schalten wir die Box komplett ab
+                setTimeout(() => {
+                    if (mobileState === 'closed') {
+                        sidebar.style.display = 'none';
+                    }
+                }, 450);
+            } else {
+                sidebar.style.display = 'flex';
+                sidebar.offsetHeight; // Reflow erzwingen
+                sidebar.style.opacity = '1';
+                sidebar.style.pointerEvents = 'auto';
+                sidebar.style.transform = `translateY(${currentTranslateY}px)`;
+            }
         }
 
         function closeSidebar() {
@@ -195,13 +187,18 @@
             } else {
                 sidebar.classList.add('apple-transition');
                 sidebar.style.transform = 'translateX(-100%)';
+                setTimeout(() => {
+                    if (!currentSelectedLocation) sidebar.style.display = 'none';
+                }, 450);
             }
             currentSelectedLocation = null;
-            resetMapView(); 
         }
 
         function openSidebar() {
+            sidebar.style.display = 'flex';
+            sidebar.offsetHeight; // Reflow erzwingen
             sidebar.classList.add('apple-transition');
+            
             if (window.innerWidth < 768) {
                 snapToState('partial');
             } else {
@@ -214,7 +211,7 @@
         let isDragging = false;
 
         touchZone.addEventListener('touchstart', (e) => {
-            if (window.innerWidth >= 768) return;
+            if (window.innerWidth >= 768 || mobileState === 'closed') return;
             isDragging = true;
             sidebar.classList.remove('apple-transition');
             startY = e.touches[0].clientY;
@@ -254,7 +251,6 @@
             } else {
                 snapToState('closed');
                 currentSelectedLocation = null;
-                resetMapView(); 
             }
         });
 
@@ -393,6 +389,7 @@
                     const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
                     marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
 
+                    // Seidenweiches Zentrieren (panTo) ohne Zoom-Änderung
                     marker.on('click', () => {
                         showDetails(loc);
                         if(window.innerWidth < 768) {
@@ -418,19 +415,25 @@
             document.getElementById(`btn-${category}`).className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
         }
 
-        const initPositions = getSheetPositions();
-        currentTranslateY = initPositions.closed;
-
         if (window.innerWidth >= 768) {
             sidebar.style.transform = 'translateX(-100%)';
+            sidebar.style.opacity = '1';
+            sidebar.style.pointerEvents = 'auto';
+            sidebar.style.display = 'flex';
         } else {
-            sidebar.style.transform = `translateY(${currentTranslateY}px)`;
+            sidebar.style.transform = `translateY(120vh)`;
+            sidebar.style.opacity = '0';
+            sidebar.style.pointerEvents = 'none';
+            sidebar.style.display = 'none';
         }
 
         renderMarkers('all');
         window.addEventListener('resize', () => {
             map.invalidateSize();
             if (window.innerWidth >= 768) {
+                sidebar.style.opacity = '1';
+                sidebar.style.pointerEvents = 'auto';
+                sidebar.style.display = 'flex';
                 sidebar.style.transform = currentSelectedLocation ? 'translateX(0)' : 'translateX(-100%)';
             } else {
                 snapToState(mobileState);
