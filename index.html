@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Opportunities Map</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        #map { height: 100%; width: 100%; }
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+            background: #1f2937 !important;
+            color: #f3f4f6 !important;
+        }
+        .tab-pane {
+            animation: fadeIn 0.25s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(3px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .leaflet-div-icon {
+            background: transparent !important;
+            border: none !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans overflow-hidden h-screen flex flex-col md:flex-row">
+
+    <div class="w-full md:w-1/3 min-w-0 md:min-w-[380px] max-w-full md:max-w-[500px] h-[45vh] md:h-full bg-gray-800 border-b md:border-b-0 md:border-r border-gray-700 flex flex-col shadow-2xl z-[1000]">
+        
+        <div class="p-4 md:p-6 pb-3 bg-gray-800/50 backdrop-blur shrink-0">
+            <h1 class="text-lg md:text-xl font-bold text-white tracking-wide">Future Compass 🧭</h1>
+            <p class="text-[11px] text-gray-400 mt-0.5">Exploration map for international career & studies</p>
+        </div>
+
+        <div class="px-4 md:px-6 pb-4 border-b border-gray-700 flex gap-2 shrink-0">
+            <button onclick="filterCategory('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white border border-blue-500/30 transition shadow-md">
+                All
+            </button>
+            <button onclick="filterCategory('university')" id="btn-university" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-gray-700 text-gray-300 border border-transparent hover:bg-gray-600 transition">
+                🎓 Universities
+            </button>
+            <button onclick="filterCategory('career')" id="btn-career" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-gray-700 text-gray-300 border border-transparent hover:bg-gray-600 transition">
+                💼 Careers
+            </button>
+        </div>
+        
+        <div id="details-content" class="p-4 md:p-6 flex-1 overflow-y-auto">
+            <div class="text-center py-6 md:py-12">
+                <p class="text-2xl md:text-3xl mb-2 md:mb-3">🌍</p>
+                <p class="text-xs md:text-sm text-gray-200 font-medium">Hover over or click a marker on the map to view specific opportunities and requirements.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 h-[55vh] md:h-full relative">
+        <div id="map"></div>
+        
+        <div class="absolute top-3 right-3 bg-gray-950/60 backdrop-blur-sm border border-gray-700/30 p-2 rounded-lg shadow-xl z-[1000] pointer-events-none">
+            <div class="space-y-1.5">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_4px_#3b82f6] border border-gray-950"></div>
+                    <span class="text-[10px] text-gray-300 font-medium tracking-wide">Universities</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_4px_#10b981] border border-gray-950"></div>
+                    <span class="text-[10px] text-gray-300 font-medium tracking-wide">Careers</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script src="locations.js"></script>
+
+    <script>
+        // 1. Karte initialisieren
+        const isMobile = window.innerWidth < 768;
+        const map = L.map('map', { zoomControl: false }).setView([25, isMobile ? 30 : 40], isMobile ? 2 : 3);
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        // 2. Dark Mode Karten-Design laden
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors © CARTO'
+        }).addTo(map);
+
+        const detailsContainer = document.getElementById('details-content');
+        let activeMarkers = [];
+        let currentSelectedLocation = null;
+
+        function switchTab(tabName) {
+            if (!currentSelectedLocation) return;
+            
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+
+            const tabs = ['req', 'proc', 'fund'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (btn) btn.className = "flex-1 py-2 rounded-md text-center text-[11px] md:text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150";
+            });
+
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            if (activeBtn) {
+                const activeStyle = currentSelectedLocation.category === 'university' 
+                    ? 'bg-blue-600 text-white shadow-sm font-semibold' 
+                    : 'bg-emerald-600 text-white shadow-sm font-semibold';
+                activeBtn.className = `flex-1 py-2 rounded-md text-center text-[11px] md:text-xs ${activeStyle} transition-all duration-150`;
+            }
+        }
+
+        function showDetails(loc) {
+            currentSelectedLocation = loc;
+            
+            const badgeColor = loc.category === 'university' ? 'bg-blue-500/20 text-blue-300 border-blue-500/40' : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+            const badgeLabel = loc.category === 'university' ? '🎓 University Track' : '💼 Career Pathway';
+            
+            const initialActiveTabStyle = loc.category === 'university' 
+                ? 'bg-blue-600 text-white shadow-sm font-semibold' 
+                : 'bg-emerald-600 text-white shadow-sm font-semibold';
+
+            detailsContainer.innerHTML = `
+                <div class="flex flex-col h-full">
+                    <span class="inline-block px-2.5 py-1 text-[10px] md:text-xs font-semibold rounded-full border ${badgeColor} self-start mb-2 md:mb-3">
+                        ${badgeLabel}
+                    </span>
+                    
+                    <h2 class="text-xl md:text-2xl font-bold text-white mb-0.5 tracking-wide">${loc.name}</h2>
+                    <p class="text-xs md:text-sm text-gray-300 font-medium italic mb-3 md:mb-4">${loc.locationName || ''}</p>
+                    
+                    <div class="p-3 bg-gray-900/40 rounded-xl border border-gray-700/60 text-[11px] md:text-xs text-gray-300 leading-relaxed mb-4 md:mb-5">
+                        ${loc.shortInfo}
+                    </div>
+                    
+                    <div class="flex bg-gray-900/60 p-1 rounded-lg gap-1 mb-4 md:mb-6 border border-gray-700/40 shrink-0">
+                        <button onclick="switchTab('req')" id="tab-btn-req" class="flex-1 py-1.5 md:py-2 rounded-md text-center text-[11px] md:text-xs ${initialActiveTabStyle} transition-all duration-150">
+                            Requirements
+                        </button>
+                        <button onclick="switchTab('proc')" id="tab-btn-proc" class="flex-1 py-1.5 md:py-2 rounded-md text-center text-[11px] md:text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150">
+                            Process
+                        </button>
+                        <button onclick="switchTab('fund')" id="tab-btn-fund" class="flex-1 py-1.5 md:py-2 rounded-md text-center text-[11px] md:text-xs font-medium text-gray-400 hover:text-gray-200 transition-all duration-150">
+                            Funding & Info
+                        </button>
+                    </div>
+
+                    <div id="tab-content-req" class="tab-pane text-xs md:text-sm text-gray-100 whitespace-pre-line leading-relaxed bg-gray-900/10 p-1 rounded-lg">
+                        ${loc.requirements}
+                    </div>
+                    <div id="tab-content-proc" class="tab-pane hidden text-xs md:text-sm text-gray-100 whitespace-pre-line leading-relaxed bg-gray-900/10 p-1 rounded-lg">
+                        ${loc.process}
+                    </div>
+                    <div id="tab-content-fund" class="tab-pane hidden text-xs md:text-sm text-gray-100 whitespace-pre-line leading-relaxed bg-gray-900/10 p-1 rounded-lg">
+                        ${loc.logistics}
+                    </div>
+                </div>
+            `;
+            
+            if(window.innerWidth < 768) {
+                document.getElementById('details-content').scrollTop = 0;
+            }
+        }
+
+        function renderMarkers(filter = 'all') {
+            activeMarkers.forEach(marker => map.removeLayer(marker));
+            activeMarkers = [];
+
+            locations.forEach(loc => {
+                if (filter === 'all' || loc.category === filter) {
+                    
+                    const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
+                    const outerRingColor = loc.category === 'university' ? 'bg-blue-500/30' : 'bg-emerald-500/30';
+                    
+                    const neonIcon = L.divIcon({
+                        html: `
+                            <div class="relative w-5 h-5 flex items-center justify-center">
+                                <div class="absolute w-full h-full rounded-full ${outerRingColor} animate-ping" style="animation-duration: 3s;"></div>
+                                <div class="w-2.5 h-2.5 rounded-full ${innerDotColor} border border-gray-900 z-10"></div>
+                            </div>
+                        `,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    });
+
+                    const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
+                    marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
+
+                    marker.on('click', () => {
+                        showDetails(loc);
+                        if(window.innerWidth < 768) {
+                            map.panTo([loc.coordinates[0] + 2, loc.coordinates[1]]);
+                        } else {
+                            map.panTo(loc.coordinates);
+                        }
+                    });
+
+                    activeMarkers.push(marker);
+                }
+            });
+        }
+
+        function filterCategory(category) {
+            renderMarkers(category);
+            const buttons = ['all', 'university', 'career'];
+            buttons.forEach(btn => {
+                document.getElementById(`btn-${btn}`).className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-gray-700 text-gray-300 border border-transparent hover:bg-gray-600 transition";
+            });
+            document.getElementById(`btn-${category}`).className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white border border-blue-500/30 transition shadow-md";
+        }
+
+        renderMarkers('all');
+        window.addEventListener('resize', () => map.invalidateSize());
+    </script>
+</body>
+</html>
