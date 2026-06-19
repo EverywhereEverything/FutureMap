@@ -42,13 +42,18 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Apple-grade Animationen */
+        /* Apple-grade Inhalt-Animation */
         .tab-pane {
             animation: textFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes textFadeIn {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Die geheime Apple-Animationskurve für Hardware-beschleunigte GPU-Bewegungen */
+        .apple-transition {
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
     </style>
 </head>
@@ -79,9 +84,9 @@
         </div>
     </div>
 
-    <div id="sidebar" class="fixed bg-gray-900/95 backdrop-blur-xl z-[1010] transition-all duration-300 ease-out flex flex-col bottom-0 left-0 w-full h-[55vh] rounded-t-3xl shadow-[0_-20px_40px_rgba(0,0,0,0.6)] translate-y-full md:top-0 md:h-full md:w-[440px] md:rounded-none md:shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)] md:-translate-x-full md:translate-y-0">
+    <div id="sidebar" class="fixed bg-gray-900/95 backdrop-blur-xl z-[1010] apple-transition flex flex-col bottom-0 left-0 w-full h-[90vh] rounded-t-3xl shadow-[0_-20px_40px_rgba(0,0,0,0.6)] md:top-0 md:h-full md:w-[440px] md:rounded-none md:shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)]" style="will-change: transform; transform: translateY(100%);">
         
-        <div id="touch-zone" class="w-full shrink-0 select-none cursor-grab active:cursor-grabbing">
+        <div id="touch-zone" class="w-full shrink-0 select-none cursor-grab active:cursor-grabbing touch-none">
             <div class="w-10 h-1 bg-gray-700/60 rounded-full mx-auto mt-3 mb-1 md:hidden"></div>
             
             <div class="p-6 pt-3 md:pt-6 pb-4 flex justify-between items-start">
@@ -123,83 +128,112 @@
         let activeMarkers = [];
         let currentSelectedLocation = null;
         
-        // NEU: Zustandsverwaltung für das mobile Kapsel-Panel ('closed', 'partial', 'expanded')
+        // Zustände mobil: 'closed' (unten unsichtbar), 'partial' (Mitte), 'expanded' (Ganz oben)
         let mobileState = 'closed';
 
-        // Synchronisiert die CSS-Klassen basierend auf dem aktuellen mobileState
-        function updateMobileSidebarDOM() {
-            if (window.innerWidth >= 768) return;
-            
-            if (mobileState === 'closed') {
-                sidebar.classList.add('translate-y-full');
-                sidebar.classList.remove('translate-y-0', 'h-[55vh]', 'h-[90vh]');
-            } else if (mobileState === 'partial') {
-                sidebar.classList.remove('translate-y-full', 'h-[90vh]');
-                sidebar.classList.add('translate-y-0', 'h-[55vh]');
-            } else if (mobileState === 'expanded') {
-                sidebar.classList.remove('translate-y-full', 'h-[55vh]');
-                sidebar.classList.add('translate-y-0', 'h-[90vh]');
-            }
+        // Hilfsfunktionen, um die exakten Pixel-Grenzwerte des Smartphone-Screens zu berechnen
+        function getSheetPositions() {
+            const viewHeight = window.innerHeight;
+            return {
+                expanded: 0,                   // 0px Verschiebung von oben
+                partial: viewHeight * 0.35,    // Schiebe 35% runter (55% bleiben sichtbar)
+                closed: viewHeight             // Komplett aus dem Bildschirm geschoben
+            };
+        }
+
+        // Steuert das finale Einrasten mit Apples cubic-bezier Kurve
+        function snapToState(state) {
+            mobileState = state;
+            sidebar.classList.add('apple-transition');
+            const positions = getSheetPositions();
+            sidebar.style.transform = `translateY(${positions[state]}px)`;
         }
 
         function closeSidebar() {
             if (window.innerWidth < 768) {
-                mobileState = 'closed';
-                updateMobileSidebarDOM();
+                snapToState('closed');
             } else {
-                sidebar.classList.add('md:-translate-x-full');
-                sidebar.classList.remove('md:translate-x-0');
+                sidebar.classList.add('apple-transition');
+                sidebar.style.transform = 'translateX(-100%)';
             }
             currentSelectedLocation = null;
         }
 
         function openSidebar() {
+            sidebar.classList.add('apple-transition');
             if (window.innerWidth < 768) {
-                mobileState = 'partial';
-                updateMobileSidebarDOM();
+                snapToState('partial');
             } else {
-                sidebar.classList.remove('md:-translate-x-full');
-                sidebar.classList.add('md:translate-x-0');
+                sidebar.style.transform = 'translateX(0)';
             }
         }
 
-        // NEU: Hochpräzise Erkennung von Touch-Gesten (Swipes) auf der Header-Zone
-        let touchStartY = 0;
-        let touchEndY = 0;
+        // NEU: Hochperformantes 60fps Echtzeit-Dragging-System
+        let startY = 0;
+        let startTranslateY = 0;
+        let isDragging = false;
 
         touchZone.addEventListener('touchstart', (e) => {
-            touchStartY = e.touches[0].clientY;
+            if (window.innerWidth >= 768) return;
+            
+            isDragging = true;
+            sidebar.classList.remove('apple-transition'); // Verhindert, dass die CSS-Animation gegen den Finger kämpft
+            
+            startY = e.touches[0].clientY;
+            
+            // Aktuelle visuelle Position auslesen
+            const positions = getSheetPositions();
+            startTranslateY = mobileState === 'partial' ? positions.partial : positions.expanded;
+        }, { passive: true });
+
+        touchZone.addEventListener('touchmove', (e) => {
+            if (!isDragging || window.innerWidth >= 768) return;
+            
+            const currentY = e.touches[0].clientY;
+            const deltaY = currentY - startY;
+            let newTranslateY = startTranslateY + deltaY;
+            
+            // "Gummiband-Effekt" (Damping), wenn man das Panel über das Limit nach oben zieht (typisch Apple)
+            if (newTranslateY < 0) {
+                newTranslateY = newTranslateY * 0.25; 
+            }
+            
+            sidebar.style.transform = `translateY(${newTranslateY}px)`;
         }, { passive: true });
 
         touchZone.addEventListener('touchend', (e) => {
-            touchEndY = e.changedTouches[0].clientY;
-            handleSwipeGesture();
-        }, { passive: true });
-
-        function handleSwipeGesture() {
-            if (window.innerWidth >= 768) return; // Gesten am Desktop deaktivieren
+            if (!isDragging || window.innerWidth >= 768) return;
+            isDragging = false;
             
-            const swipeDistance = touchStartY - touchEndY; // Positiv = nach oben gewischt, Negativ = nach unten
-            const threshold = 45; // Mindestdistanz in Pixeln, um eine Geste zu werten
-
-            if (swipeDistance > threshold) {
-                // Wisch nach oben -> Panel weiter ausfahren
-                if (mobileState === 'partial') {
-                    mobileState = 'expanded';
-                    updateMobileSidebarDOM();
-                }
-            } else if (swipeDistance < -threshold) {
-                // Wisch nach unten -> Stufe verringern oder ganz schließen
-                if (mobileState === 'expanded') {
-                    mobileState = 'partial';
-                    updateMobileSidebarDOM();
-                } else if (mobileState === 'partial') {
-                    closeSidebar();
-                }
+            // Auslesen, wo der Finger losgelassen wurde
+            const currentTransform = window.getComputedStyle(sidebar).transform;
+            let actualY = 0;
+            if (currentTransform && currentTransform !== 'none') {
+                const matrixValues = currentTransform.match(/matrix.*\((.+)\)/)[1].split(', ');
+                actualY = parseFloat(matrixValues[5]); // Holt den aktuellen translateY Pixelwert
             }
-        }
+            
+            const positions = getSheetPositions();
+            
+            // Schwellenwerte berechnen, wo eingerastet werden soll
+            const distanceToExpanded = Math.abs(actualY - positions.expanded);
+            const distanceToPartial = Math.abs(actualY - positions.partial);
+            const distanceToClosed = Math.abs(actualY - positions.closed);
+            
+            // Finde den nächstgelegenen Zustand
+            const minDistance = Math.min(distanceToExpanded, distanceToPartial, distanceToClosed);
+            
+            if (minDistance === distanceToExpanded) {
+                snapToState('expanded');
+            } else if (minDistance === distanceToPartial) {
+                snapToState('partial');
+            } else {
+                snapToState('closed');
+                currentSelectedLocation = null;
+            }
+        });
 
-        // Text-Strukturierungsmaschine
+        // Text-Strukturierungsmaschine (Parser)
         function formatTabContent(text, category) {
             if (!text) return '';
             const sections = text.split('\n\n');
@@ -317,7 +351,7 @@
 
             locations.forEach(loc => {
                 if (filter === 'all' || loc.category === filter) {
-                    const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
+                    const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]' ;
                     const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
                     
                     const neonIcon = L.divIcon({
@@ -367,8 +401,21 @@
             document.getElementById(`btn-${category}`).className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
         }
 
+        // Initiale Platzierung beim Desktop-Start korrigieren
+        if (window.innerWidth >= 768) {
+            sidebar.style.transform = 'translateX(-100%)';
+        }
+
         renderMarkers('all');
-        window.addEventListener('resize', () => map.invalidateSize());
+        window.addEventListener('resize', () => {
+            map.invalidateSize();
+            // Verhindert Layout-Glitsches beim Drehen des Bildschirms
+            if (window.innerWidth >= 768) {
+                sidebar.style.transform = currentSelectedLocation ? 'translateX(0)' : 'translateX(-100%)';
+            } else {
+                snapToState(mobileState);
+            }
+        });
     </script>
 </body>
 </html>
