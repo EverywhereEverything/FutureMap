@@ -125,11 +125,15 @@
         const detailsContainer = document.getElementById('details-content');
         const touchZone = document.getElementById('touch-zone');
         
+        // CRITICAL FIX: Verhindert, dass Leaflet Touch-Gesten auf der Info-Box abfängt und blockiert
+        L.DomEvent.disableClickPropagation(sidebar);
+        L.DomEvent.disableScrollPropagation(sidebar);
+
         let activeMarkers = [];
         let currentSelectedLocation = null;
         
         let mobileState = 'closed';
-        let currentTranslateY = window.innerHeight; // Trackt die Echtzeit-Position unabhängig vom Browser
+        let currentTranslateY = window.innerHeight;
 
         function getSheetPositions() {
             const viewHeight = window.innerHeight;
@@ -148,7 +152,7 @@
             sidebar.style.transform = `translateY(${currentTranslateY}px)`;
         }
 
-        // NEU: Automatischer globaler Kamera-Reset beim Schließen der Menüs
+        // Automatischer Kamera-Reset beim Schließen der Menüs
         function resetMapView() {
             const mobileMode = window.innerWidth < 768;
             map.flyTo([28, mobileMode ? 25 : 20], mobileMode ? 2 : 3, {
@@ -165,7 +169,7 @@
                 sidebar.style.transform = 'translateX(-100%)';
             }
             currentSelectedLocation = null;
-            resetMapView(); // Kamera fliegt automatisch zurück in die Weltansicht
+            resetMapView(); 
         }
 
         function openSidebar() {
@@ -177,17 +181,15 @@
             }
         }
 
-        // REPARIERT: Absolut krisensicheres 1:1 Touch-Tracking ohne Matrix-Parsing
+        // GESTEN-CONTROLLER: Mit passive:false fixiert der Finger das Sheet ohne Browser-Interferenz
         let startY = 0;
         let startTranslateY = 0;
         let isDragging = false;
 
         touchZone.addEventListener('touchstart', (e) => {
             if (window.innerWidth >= 768) return;
-            
             isDragging = true;
             sidebar.classList.remove('apple-transition');
-            
             startY = e.touches[0].clientY;
             startTranslateY = currentTranslateY;
         }, { passive: true });
@@ -195,29 +197,29 @@
         touchZone.addEventListener('touchmove', (e) => {
             if (!isDragging || window.innerWidth >= 768) return;
             
+            // Stoppt das standardmäßige Ruckeln und Bouncen des Smartphone-Browsers
+            if (e.cancelable) e.preventDefault(); 
+            
             const currentY = e.touches[0].clientY;
             const deltaY = currentY - startY;
             let newTranslateY = startTranslateY + deltaY;
             
-            // Gummiband-Effekt nach oben begrenzen
             if (newTranslateY < 0) {
                 newTranslateY = newTranslateY * 0.25; 
             }
             
-            currentTranslateY = newTranslateY; // Lokale Variable füttern
+            currentTranslateY = newTranslateY;
             sidebar.style.transform = `translateY(${newTranslateY}px)`;
-        }, { passive: true });
+        }, { passive: false }); // WICHTIG: passive false erlaubt e.preventDefault()
 
         touchZone.addEventListener('touchend', (e) => {
             if (!isDragging || window.innerWidth >= 768) return;
             isDragging = false;
             
             const positions = getSheetPositions();
-            
             const distanceToExpanded = Math.abs(currentTranslateY - positions.expanded);
             const distanceToPartial = Math.abs(currentTranslateY - positions.partial);
             const distanceToClosed = Math.abs(currentTranslateY - positions.closed);
-            
             const minDistance = Math.min(distanceToExpanded, distanceToPartial, distanceToClosed);
             
             if (minDistance === distanceToExpanded) {
@@ -227,7 +229,7 @@
             } else {
                 snapToState('closed');
                 currentSelectedLocation = null;
-                resetMapView(); // Auch beim händischen Runterwischen automatisch rauszoomen
+                resetMapView(); 
             }
         });
 
@@ -366,20 +368,13 @@
                     const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
                     marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
 
+                    // OPTIMIERT: Reinfliegen komplett deaktiviert, Kamera verschiebt sich nur sanft im optimalen Fokus-Ausschnitt
                     marker.on('click', () => {
                         showDetails(loc);
-                        const targetZoom = 7;
-                        
                         if(window.innerWidth < 768) {
-                            map.flyTo([loc.coordinates[0] + 0.5, loc.coordinates[1]], targetZoom, {
-                                animate: true,
-                                duration: 1.2
-                            });
+                            map.panTo([loc.coordinates[0] - 1.2, loc.coordinates[1]], { animate: true, duration: 0.6 });
                         } else {
-                            map.flyTo([loc.coordinates[0], loc.coordinates[1] - 1.5], targetZoom, {
-                                animate: true,
-                                duration: 1.2
-                            });
+                            map.panTo([loc.coordinates[0], loc.coordinates[1] - 4], { animate: true, duration: 0.6 });
                         }
                     });
 
@@ -390,7 +385,7 @@
 
         function filterCategory(category) {
             renderMarkers(category);
-            closeSidebar(); // Löst auch hier automatisch den Kamera-Reset aus
+            closeSidebar(); 
             const buttons = ['all', 'university', 'career'];
             buttons.forEach(btn => {
                 document.getElementById(`btn-${btn}`).className = "flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200";
@@ -399,7 +394,6 @@
             document.getElementById(`btn-${category}`).className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
         }
 
-        // Initiale Position setzen
         const initPositions = getSheetPositions();
         currentTranslateY = initPositions.closed;
 
