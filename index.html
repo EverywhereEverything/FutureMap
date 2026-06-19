@@ -51,7 +51,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Die geheime Apple-Animationskurve für Hardware-beschleunigte GPU-Bewegungen */
+        /* Die gesetzte Apple-Animationskurve für GPU-Bewegungen */
         .apple-transition {
             transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
@@ -128,25 +128,33 @@
         let activeMarkers = [];
         let currentSelectedLocation = null;
         
-        // Zustände mobil: 'closed' (unten unsichtbar), 'partial' (Mitte), 'expanded' (Ganz oben)
         let mobileState = 'closed';
+        let currentTranslateY = window.innerHeight; // Trackt die Echtzeit-Position unabhängig vom Browser
 
-        // Hilfsfunktionen, um die exakten Pixel-Grenzwerte des Smartphone-Screens zu berechnen
         function getSheetPositions() {
             const viewHeight = window.innerHeight;
             return {
-                expanded: 0,                   // 0px Verschiebung von oben
-                partial: viewHeight * 0.35,    // Schiebe 35% runter (55% bleiben sichtbar)
-                closed: viewHeight             // Komplett aus dem Bildschirm geschoben
+                expanded: 0,
+                partial: viewHeight * 0.35,
+                closed: viewHeight
             };
         }
 
-        // Steuert das finale Einrasten mit Apples cubic-bezier Kurve
         function snapToState(state) {
             mobileState = state;
             sidebar.classList.add('apple-transition');
             const positions = getSheetPositions();
-            sidebar.style.transform = `translateY(${positions[state]}px)`;
+            currentTranslateY = positions[state];
+            sidebar.style.transform = `translateY(${currentTranslateY}px)`;
+        }
+
+        // NEU: Automatischer globaler Kamera-Reset beim Schließen der Menüs
+        function resetMapView() {
+            const mobileMode = window.innerWidth < 768;
+            map.flyTo([28, mobileMode ? 25 : 20], mobileMode ? 2 : 3, {
+                animate: true,
+                duration: 1.0
+            });
         }
 
         function closeSidebar() {
@@ -157,6 +165,7 @@
                 sidebar.style.transform = 'translateX(-100%)';
             }
             currentSelectedLocation = null;
+            resetMapView(); // Kamera fliegt automatisch zurück in die Weltansicht
         }
 
         function openSidebar() {
@@ -168,7 +177,7 @@
             }
         }
 
-        // NEU: Hochperformantes 60fps Echtzeit-Dragging-System
+        // REPARIERT: Absolut krisensicheres 1:1 Touch-Tracking ohne Matrix-Parsing
         let startY = 0;
         let startTranslateY = 0;
         let isDragging = false;
@@ -177,13 +186,10 @@
             if (window.innerWidth >= 768) return;
             
             isDragging = true;
-            sidebar.classList.remove('apple-transition'); // Verhindert, dass die CSS-Animation gegen den Finger kämpft
+            sidebar.classList.remove('apple-transition');
             
             startY = e.touches[0].clientY;
-            
-            // Aktuelle visuelle Position auslesen
-            const positions = getSheetPositions();
-            startTranslateY = mobileState === 'partial' ? positions.partial : positions.expanded;
+            startTranslateY = currentTranslateY;
         }, { passive: true });
 
         touchZone.addEventListener('touchmove', (e) => {
@@ -193,11 +199,12 @@
             const deltaY = currentY - startY;
             let newTranslateY = startTranslateY + deltaY;
             
-            // "Gummiband-Effekt" (Damping), wenn man das Panel über das Limit nach oben zieht (typisch Apple)
+            // Gummiband-Effekt nach oben begrenzen
             if (newTranslateY < 0) {
                 newTranslateY = newTranslateY * 0.25; 
             }
             
+            currentTranslateY = newTranslateY; // Lokale Variable füttern
             sidebar.style.transform = `translateY(${newTranslateY}px)`;
         }, { passive: true });
 
@@ -205,22 +212,12 @@
             if (!isDragging || window.innerWidth >= 768) return;
             isDragging = false;
             
-            // Auslesen, wo der Finger losgelassen wurde
-            const currentTransform = window.getComputedStyle(sidebar).transform;
-            let actualY = 0;
-            if (currentTransform && currentTransform !== 'none') {
-                const matrixValues = currentTransform.match(/matrix.*\((.+)\)/)[1].split(', ');
-                actualY = parseFloat(matrixValues[5]); // Holt den aktuellen translateY Pixelwert
-            }
-            
             const positions = getSheetPositions();
             
-            // Schwellenwerte berechnen, wo eingerastet werden soll
-            const distanceToExpanded = Math.abs(actualY - positions.expanded);
-            const distanceToPartial = Math.abs(actualY - positions.partial);
-            const distanceToClosed = Math.abs(actualY - positions.closed);
+            const distanceToExpanded = Math.abs(currentTranslateY - positions.expanded);
+            const distanceToPartial = Math.abs(currentTranslateY - positions.partial);
+            const distanceToClosed = Math.abs(currentTranslateY - positions.closed);
             
-            // Finde den nächstgelegenen Zustand
             const minDistance = Math.min(distanceToExpanded, distanceToPartial, distanceToClosed);
             
             if (minDistance === distanceToExpanded) {
@@ -230,6 +227,7 @@
             } else {
                 snapToState('closed');
                 currentSelectedLocation = null;
+                resetMapView(); // Auch beim händischen Runterwischen automatisch rauszoomen
             }
         });
 
@@ -351,7 +349,7 @@
 
             locations.forEach(loc => {
                 if (filter === 'all' || loc.category === filter) {
-                    const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]' ;
+                    const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
                     const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
                     
                     const neonIcon = L.divIcon({
@@ -392,7 +390,7 @@
 
         function filterCategory(category) {
             renderMarkers(category);
-            closeSidebar();
+            closeSidebar(); // Löst auch hier automatisch den Kamera-Reset aus
             const buttons = ['all', 'university', 'career'];
             buttons.forEach(btn => {
                 document.getElementById(`btn-${btn}`).className = "flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200";
@@ -401,15 +399,19 @@
             document.getElementById(`btn-${category}`).className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
         }
 
-        // Initiale Platzierung beim Desktop-Start korrigieren
+        // Initiale Position setzen
+        const initPositions = getSheetPositions();
+        currentTranslateY = initPositions.closed;
+
         if (window.innerWidth >= 768) {
             sidebar.style.transform = 'translateX(-100%)';
+        } else {
+            sidebar.style.transform = `translateY(${currentTranslateY}px)`;
         }
 
         renderMarkers('all');
         window.addEventListener('resize', () => {
             map.invalidateSize();
-            // Verhindert Layout-Glitsches beim Drehen des Bildschirms
             if (window.innerWidth >= 768) {
                 sidebar.style.transform = currentSelectedLocation ? 'translateX(0)' : 'translateX(-100%)';
             } else {
