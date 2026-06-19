@@ -79,20 +79,22 @@
         </div>
     </div>
 
-    <div id="sidebar" class="fixed bg-gray-900/95 backdrop-blur-xl z-[1010] transition-transform duration-300 ease-out flex flex-col bottom-0 left-0 w-full h-[55vh] rounded-t-3xl shadow-[0_-20px_40px_rgba(0,0,0,0.6)] translate-y-full md:top-0 md:h-full md:w-[440px] md:rounded-none md:shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)] md:-translate-x-full md:translate-y-0">
+    <div id="sidebar" class="fixed bg-gray-900/95 backdrop-blur-xl z-[1010] transition-all duration-300 ease-out flex flex-col bottom-0 left-0 w-full h-[55vh] rounded-t-3xl shadow-[0_-20px_40px_rgba(0,0,0,0.6)] translate-y-full md:top-0 md:h-full md:w-[440px] md:rounded-none md:shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)] md:-translate-x-full md:translate-y-0">
         
-        <div class="w-10 h-1 bg-gray-700/60 rounded-full mx-auto mt-3 mb-1 md:hidden shrink-0"></div>
-        
-        <div class="p-6 pt-3 md:pt-6 pb-4 flex justify-between items-start shrink-0">
-            <div>
-                <h1 class="text-xl font-bold text-white tracking-wide">Future Compass</h1>
-                <p class="text-[11px] text-gray-400 mt-0.5">Exploration hub for international studies</p>
+        <div id="touch-zone" class="w-full shrink-0 select-none cursor-grab active:cursor-grabbing">
+            <div class="w-10 h-1 bg-gray-700/60 rounded-full mx-auto mt-3 mb-1 md:hidden"></div>
+            
+            <div class="p-6 pt-3 md:pt-6 pb-4 flex justify-between items-start">
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-wide">Future Compass</h1>
+                    <p class="text-[11px] text-gray-400 mt-0.5">Exploration hub for international studies</p>
+                </div>
+                <button onclick="closeSidebar()" class="text-gray-400 hover:text-white p-1.5 rounded-xl hover:bg-white/5 transition duration-150">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
-            <button onclick="closeSidebar()" class="text-gray-400 hover:text-white p-1.5 rounded-xl hover:bg-white/5 transition duration-150">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
         </div>
         
         <div id="details-content" class="px-6 pb-6 flex-1 overflow-y-auto no-scrollbar">
@@ -116,22 +118,84 @@
 
         const sidebar = document.getElementById('sidebar');
         const detailsContainer = document.getElementById('details-content');
+        const touchZone = document.getElementById('touch-zone');
+        
         let activeMarkers = [];
         let currentSelectedLocation = null;
+        
+        // NEU: Zustandsverwaltung für das mobile Kapsel-Panel ('closed', 'partial', 'expanded')
+        let mobileState = 'closed';
+
+        // Synchronisiert die CSS-Klassen basierend auf dem aktuellen mobileState
+        function updateMobileSidebarDOM() {
+            if (window.innerWidth >= 768) return;
+            
+            if (mobileState === 'closed') {
+                sidebar.classList.add('translate-y-full');
+                sidebar.classList.remove('translate-y-0', 'h-[55vh]', 'h-[90vh]');
+            } else if (mobileState === 'partial') {
+                sidebar.classList.remove('translate-y-full', 'h-[90vh]');
+                sidebar.classList.add('translate-y-0', 'h-[55vh]');
+            } else if (mobileState === 'expanded') {
+                sidebar.classList.remove('translate-y-full', 'h-[55vh]');
+                sidebar.classList.add('translate-y-0', 'h-[90vh]');
+            }
+        }
 
         function closeSidebar() {
-            sidebar.classList.add('translate-y-full', 'md:-translate-x-full');
-            sidebar.classList.remove('translate-y-0', 'md:translate-x-0');
+            if (window.innerWidth < 768) {
+                mobileState = 'closed';
+                updateMobileSidebarDOM();
+            } else {
+                sidebar.classList.add('md:-translate-x-full');
+                sidebar.classList.remove('md:translate-x-0');
+            }
             currentSelectedLocation = null;
         }
 
         function openSidebar() {
             if (window.innerWidth < 768) {
-                sidebar.classList.remove('translate-y-full');
-                sidebar.classList.add('translate-y-0');
+                mobileState = 'partial';
+                updateMobileSidebarDOM();
             } else {
                 sidebar.classList.remove('md:-translate-x-full');
                 sidebar.classList.add('md:translate-x-0');
+            }
+        }
+
+        // NEU: Hochpräzise Erkennung von Touch-Gesten (Swipes) auf der Header-Zone
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        touchZone.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        touchZone.addEventListener('touchend', (e) => {
+            touchEndY = e.changedTouches[0].clientY;
+            handleSwipeGesture();
+        }, { passive: true });
+
+        function handleSwipeGesture() {
+            if (window.innerWidth >= 768) return; // Gesten am Desktop deaktivieren
+            
+            const swipeDistance = touchStartY - touchEndY; // Positiv = nach oben gewischt, Negativ = nach unten
+            const threshold = 45; // Mindestdistanz in Pixeln, um eine Geste zu werten
+
+            if (swipeDistance > threshold) {
+                // Wisch nach oben -> Panel weiter ausfahren
+                if (mobileState === 'partial') {
+                    mobileState = 'expanded';
+                    updateMobileSidebarDOM();
+                }
+            } else if (swipeDistance < -threshold) {
+                // Wisch nach unten -> Stufe verringern oder ganz schließen
+                if (mobileState === 'expanded') {
+                    mobileState = 'partial';
+                    updateMobileSidebarDOM();
+                } else if (mobileState === 'partial') {
+                    closeSidebar();
+                }
             }
         }
 
@@ -272,10 +336,18 @@
 
                     marker.on('click', () => {
                         showDetails(loc);
+                        const targetZoom = 7;
+                        
                         if(window.innerWidth < 768) {
-                            map.panTo([loc.coordinates[0] + 3.2, loc.coordinates[1]]);
+                            map.flyTo([loc.coordinates[0] + 0.5, loc.coordinates[1]], targetZoom, {
+                                animate: true,
+                                duration: 1.2
+                            });
                         } else {
-                            map.panTo([loc.coordinates[0], loc.coordinates[1] - 1.5]);
+                            map.flyTo([loc.coordinates[0], loc.coordinates[1] - 1.5], targetZoom, {
+                                animate: true,
+                                duration: 1.2
+                            });
                         }
                     });
 
