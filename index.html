@@ -477,6 +477,78 @@
                 snapToState(mobileState);
             }
         });
+        <script src="locations.js"></script>
+
+    <script>
+        // HIER steht bereits deine Karten-Initialisierung (Beispiel):
+        const map = L.map('map').setView([20, 0], 2); 
+
+        // HIER kommen die Leaflet-Kacheln (OpenStreetMap / Mapbox etc.)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '...'
+        }).addTo(map);
+
+        // ==========================================
+        // GAUCH HIER FÜGST DU NUN DEN CODE AUS SCHRITT 2 EIN:
+        // ==========================================
+
+        function defaultCountryStyle(feature) {
+          return {
+            fillColor: "#2ecc71",   
+            weight: 1,              
+            opacity: 0.3,           
+            color: "#2ecc71",       
+            fillOpacity: 0.0        
+          };
+        }
+
+        function highlightCountry(e) {
+          const layer = e.target;
+          layer.setStyle({
+            weight: 2,              
+            color: "#2ecc71",       
+            fillOpacity: 0.15       
+          });
+          if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+          }
+        }
+
+        function resetCountryStyle(e) {
+          geojsonLayer.resetStyle(e.target); 
+        }
+
+        function onEachCountryFeature(feature, layer) {
+          layer.on({
+            mouseover: highlightCountry,
+            mouseout: resetCountryStyle,
+            click: function(e) {
+              map.fitBounds(e.target.getBounds());
+            }
+          });
+        }
+
+        let geojsonLayer;
+
+        // WICHTIG: Hier steht jetzt exakt dein Dateiname aus dem Repository!
+        fetch('./countries.geo.json') 
+          .then(response => response.json())
+          .then(geoJsonData => {
+            geojsonLayer = L.geoJson(geoJsonData, {
+              style: defaultCountryStyle,
+              onEachFeature: onEachCountryFeature
+            }).addTo(map);
+          })
+          .catch(error => console.error("Fehler beim Laden der Ländergrenzen:", error));
+
+        // ==========================================
+        // HIER drunter steht wahrscheinlich deine Schleife, 
+        // die die Marker aus der locations.js auf die Karte setzt:
+        // ==========================================
+        locations.forEach(loc => {
+            L.marker(loc.coordinates).addTo(map)
+             .bindPopup(`<b>${loc.name}</b><br>${loc.shortInfo}`);
+        });
     </script>
 </body>
 </html>
