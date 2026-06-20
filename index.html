@@ -108,19 +108,18 @@
             </div>
         </div>
         
-        <div id="details-content" class="px-6 pb-6 flex-1 overflow-y-auto no-scrollbar">
-            </div>
+        <div id="details-content" class="px-6 pb-6 flex-1 overflow-y-auto no-scrollbar"></div>
     </div>
 
     <div id="map" class="w-full h-full absolute inset-0"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script src="locations.js"></script>
 
     <script>
         const isMobile = window.innerWidth < 768;
         
+        // 1. Karte im edlen Dunkelmodus initialisieren
         const map = L.map('map', { 
             zoomControl: false,
             attributionControl: false 
@@ -132,6 +131,67 @@
             attribution: '© OpenStreetMap contributors © CARTO'
         }).addTo(map);
 
+        // ==========================================
+        // NEU: INTERAKTIVE LÄNDERGRENZEN (GEOJSON) LOGIK
+        // ==========================================
+        let geojsonLayer;
+
+        function defaultCountryStyle(feature) {
+          return {
+            fillColor: "#10b981",   // Elegantes Grün passend zum Thema
+            weight: 1,              
+            opacity: 0.2,           
+            color: "#10b981",       
+            fillOpacity: 0.0        // Unsichtbar im Normalzustand
+          };
+        }
+
+        function highlightCountry(e) {
+          const layer = e.target;
+          layer.setStyle({
+            weight: 1.5,              
+            color: "#10b981",       
+            fillOpacity: 0.1        // Leuchtet beim Hovern sanft auf
+          });
+          if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+          }
+        }
+
+        function resetCountryStyle(e) {
+          if (geojsonLayer) {
+            geojsonLayer.resetStyle(e.target);
+          }
+        }
+
+        function onEachCountryFeature(feature, layer) {
+          layer.on({
+            mouseover: highlightCountry,
+            mouseout: resetCountryStyle,
+            click: function(e) {
+              map.fitBounds(e.target.getBounds());
+            }
+          });
+        }
+
+        // Grenzen asynchron laden (verhindert CORS Probleme auf GitHub Pages)
+        fetch('./countries.geo.json') 
+          .then(response => response.json())
+          .then(geoJsonData => {
+            geojsonLayer = L.geoJson(geoJsonData, {
+              style: defaultCountryStyle,
+              onEachFeature: onEachCountryFeature
+            }).addTo(map);
+            
+            // Wichtig: Bringt die interaktiven Flächen in den Hintergrund unter die Marker
+            geojsonLayer.bringToBack();
+          })
+          .catch(error => console.error("Fehler beim Laden der Ländergrenzen:", error));
+
+
+        // ==========================================
+        // BESTEHENDE SYSTEMFUNKTIONEN (SIDEBAR & MENÜS)
+        // ==========================================
         const sidebar = document.getElementById('sidebar');
         const detailsContainer = document.getElementById('details-content');
         const touchZone = document.getElementById('touch-zone');
@@ -154,7 +214,6 @@
             };
         }
 
-        // DYNAMISCHES OVERFLOW-MANAGEMENT (The Apple Way)
         function snapToState(state) {
             mobileState = state;
             sidebar.classList.add('apple-transition');
@@ -175,12 +234,11 @@
                 sidebar.style.pointerEvents = 'auto';
                 sidebar.style.transform = `translateY(${currentTranslateY}px)`;
                 
-                // CRITICAL FIX: Verhindert das "Festsitzen" des Scrollens im Teilmodus
                 if (window.innerWidth < 768) {
                     if (state === 'partial') {
-                        detailsContainer.style.overflowY = 'hidden'; // Sperrt das Text-Scrollen, gibt Geste frei
+                        detailsContainer.style.overflowY = 'hidden';
                     } else if (state === 'expanded') {
-                        detailsContainer.style.overflowY = 'auto';   // Aktiviert Text-Scrollen erst im Vollbild
+                        detailsContainer.style.overflowY = 'auto';
                     }
                 } else {
                     detailsContainer.style.overflowY = 'auto';
@@ -222,20 +280,17 @@
             }
         }
 
-        // INTELLIGENTES GESTEN-INTERCEPTION-SYSTEM
+        // GESTEN-STEUERUNG
         let startY = 0;
         let startTranslateY = 0;
         let isDragging = false;
 
-        // passive: false ist zwingend nötig, damit iOS e.preventDefault() erlaubt!
         sidebar.addEventListener('touchstart', (e) => {
             if (window.innerWidth >= 768 || mobileState === 'closed') return;
             
             const isTouchZone = touchZone.contains(e.target);
             const isContentZone = detailsContainer.contains(e.target);
             
-            // Fall 1: Im Teilmodus fangen wir jeden Wisch ab (Egal ob Text oder Header), um rauszufahren
-            // Fall 2: Im Vollbild fangen wir den Wisch nur ab, wenn der Text ganz oben steht (scrollTop <= 0) und nach unten gezogen wird
             if (mobileState === 'partial' || isTouchZone || (mobileState === 'expanded' && isContentZone && detailsContainer.scrollTop <= 0)) {
                 isDragging = true;
                 sidebar.classList.remove('apple-transition');
@@ -248,10 +303,9 @@
             if (window.innerWidth >= 768 || mobileState === 'closed') return;
             
             const currentY = e.touches[0].clientY;
-            const deltaY = currentY - startY; // Positiv = Runterziehen, Negativ = Hochziehen
+            const deltaY = currentY - startY;
             const isContentZone = detailsContainer.contains(e.target);
 
-            // Spezialfall: Wenn man im Vollbild ist und auf dem Text nach OBEN wischt, soll der Text scrollen, NICHT das Sheet dregget werden!
             if (isDragging && mobileState === 'expanded' && isContentZone && deltaY < 0) {
                 isDragging = false;
                 sidebar.classList.add('apple-transition');
@@ -264,7 +318,7 @@
                 
                 let newTranslateY = startTranslateY + deltaY;
                 if (newTranslateY < 0) {
-                    newTranslateY = newTranslateY * 0.25; // iOS Bouncer
+                    newTranslateY = newTranslateY * 0.25;
                 }
                 
                 currentTranslateY = newTranslateY;
@@ -293,7 +347,7 @@
             }
         });
 
-        // Text-Strukturierungsmaschine (Parser)
+        // PARSER FÜR DIE STRUKTURIERUNGSMASCHINE
         function formatTabContent(text, category) {
             if (!text) return '';
             const sections = text.split('\n\n');
@@ -405,6 +459,7 @@
             detailsContainer.scrollTop = 0;
         }
 
+        // DESIGN DER NEON-MARKER UND RENDERING
         function renderMarkers(filter = 'all') {
             activeMarkers.forEach(marker => map.removeLayer(marker));
             activeMarkers = [];
@@ -447,12 +502,17 @@
             closeSidebar(); 
             const buttons = ['all', 'university', 'career'];
             buttons.forEach(btn => {
-                document.getElementById(`btn-${btn}`).className = "flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200";
+                const el = document.getElementById(`btn-${btn}`);
+                if (el) el.className = "flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200";
             });
             const activeColor = category === 'career' ? 'bg-emerald-600' : 'bg-blue-600';
-            document.getElementById(`btn-${category}`).className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
+            const targetBtn = document.getElementById(`btn-${category}`);
+            if (targetBtn) {
+                targetBtn.className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
+            }
         }
 
+        // INITIALISIERUNG DER RESPONSIVEN ELEMENTE
         if (window.innerWidth >= 768) {
             sidebar.style.transform = 'translateX(-100%)';
             sidebar.style.opacity = '1';
@@ -466,6 +526,7 @@
         }
 
         renderMarkers('all');
+        
         window.addEventListener('resize', () => {
             map.invalidateSize();
             if (window.innerWidth >= 768) {
@@ -476,78 +537,6 @@
             } else {
                 snapToState(mobileState);
             }
-        });
-        <script src="locations.js"></script>
-
-    <script>
-        // HIER steht bereits deine Karten-Initialisierung (Beispiel):
-        const map = L.map('map').setView([20, 0], 2); 
-
-        // HIER kommen die Leaflet-Kacheln (OpenStreetMap / Mapbox etc.)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '...'
-        }).addTo(map);
-
-        // ==========================================
-        // GAUCH HIER FÜGST DU NUN DEN CODE AUS SCHRITT 2 EIN:
-        // ==========================================
-
-        function defaultCountryStyle(feature) {
-          return {
-            fillColor: "#2ecc71",   
-            weight: 1,              
-            opacity: 0.3,           
-            color: "#2ecc71",       
-            fillOpacity: 0.0        
-          };
-        }
-
-        function highlightCountry(e) {
-          const layer = e.target;
-          layer.setStyle({
-            weight: 2,              
-            color: "#2ecc71",       
-            fillOpacity: 0.15       
-          });
-          if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-            layer.bringToFront();
-          }
-        }
-
-        function resetCountryStyle(e) {
-          geojsonLayer.resetStyle(e.target); 
-        }
-
-        function onEachCountryFeature(feature, layer) {
-          layer.on({
-            mouseover: highlightCountry,
-            mouseout: resetCountryStyle,
-            click: function(e) {
-              map.fitBounds(e.target.getBounds());
-            }
-          });
-        }
-
-        let geojsonLayer;
-
-        // WICHTIG: Hier steht jetzt exakt dein Dateiname aus dem Repository!
-        fetch('./countries.geo.json') 
-          .then(response => response.json())
-          .then(geoJsonData => {
-            geojsonLayer = L.geoJson(geoJsonData, {
-              style: defaultCountryStyle,
-              onEachFeature: onEachCountryFeature
-            }).addTo(map);
-          })
-          .catch(error => console.error("Fehler beim Laden der Ländergrenzen:", error));
-
-        // ==========================================
-        // HIER drunter steht wahrscheinlich deine Schleife, 
-        // die die Marker aus der locations.js auf die Karte setzt:
-        // ==========================================
-        locations.forEach(loc => {
-            L.marker(loc.coordinates).addTo(map)
-             .bindPopup(`<b>${loc.name}</b><br>${loc.shortInfo}`);
         });
     </script>
 </body>
