@@ -89,18 +89,18 @@
             </button>
         </div>
 
-        <div id="filter-popover" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col gap-3 animate-textFadeIn">
+       <div id="filter-popover" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col gap-3 animate-textFadeIn">
             <h4 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 border-b border-gray-800/60 pb-1.5">Zusatzfilter</h4>
             
+            <!-- Filter 1: Tax Advantages -->
             <label class="flex items-center gap-2.5 cursor-pointer select-none group">
-                <input type="checkbox" id="check-un" onchange="toggleUnFilter(this.checked)" class="sr-only peer">
+                <input type="checkbox" id="check-tax" onchange="toggleTaxFilter(this.checked)" class="sr-only peer">
                 <div class="w-4 h-4 rounded border border-gray-600 bg-gray-950 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 flex items-center justify-center transition-all duration-150 group-hover:border-gray-400">
                     <svg class="w-3 h-3 text-gray-950 stroke-[3.5] hidden peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
                 </div>
-                <span class="text-xs font-medium text-gray-300 group-hover:text-white transition duration-150">🇺🇳 Only UN-affiliated</span>
+                <span class="text-xs font-medium text-gray-300 group-hover:text-white transition duration-150">💰 Tax-free Salaries</span>
             </label>
-
-            </div>
+        </div>
     </div>
 
     <div class="absolute bottom-4 left-4 bg-gray-900/50 backdrop-blur-sm p-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] z-[1000] pointer-events-none hidden md:block">
@@ -148,9 +148,9 @@
         let mobileState = 'closed';
         let currentTranslateY = window.innerHeight + 200;
 
-        const currentFilters = {
+      const currentFilters = {
             category: 'all',
-            unAffiliated: false
+            taxAdvantage: false
         };
         
         // 1. Karte im Dunkelmodus initialisieren
@@ -228,13 +228,12 @@
             let searchName = countryName.toLowerCase();
             if (searchName.includes("united states")) searchName = "usa";
 
-            // Filtert Locations basierend auf Land UND den aktiven Filtern
-            const countryLocations = locations.filter(loc => {
+           const countryLocations = locations.filter(loc => {
                 const matchesCountry = loc.locationName.toLowerCase().includes(searchName);
                 const matchesCategory = currentFilters.category === 'all' || loc.category === currentFilters.category;
-                const matchesUN = !currentFilters.unAffiliated || loc.unAffiliated;
+                const matchesTax = !currentFilters.taxAdvantage || loc.taxAdvantage;
                 
-                return matchesCountry && matchesCategory && matchesUN;
+                return matchesCountry && matchesCategory && matchesTax;
             });
 
             if (countryLocations.length === 0) {
@@ -303,7 +302,7 @@
                     return; 
                 }
 
-                if (currentFilters.unAffiliated && !loc.unAffiliated) {
+               if (currentFilters.taxAdvantage && !loc.taxAdvantage) {
                     return; 
                 }
 
@@ -355,8 +354,8 @@
             renderMarkers(); 
         }
 
-        function toggleUnFilter(isChecked) {
-            currentFilters.unAffiliated = isChecked; 
+       function toggleTaxFilter(isChecked) {
+            currentFilters.taxAdvantage = isChecked; 
             closeSidebar();
             renderMarkers(); 
         }
