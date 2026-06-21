@@ -93,13 +93,17 @@
             </button>
         </div>
 
-        <div id="search-container" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-2 rounded-xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex items-center gap-2 animate-textFadeIn">
-            <div class="text-gray-500 pl-1.5">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"></path>
-                </svg>
+       <div id="search-container" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-2 rounded-xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col gap-1 animate-textFadeIn">
+            <div class="flex items-center gap-2 w-full">
+                <div class="text-gray-500 pl-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"></path>
+                    </svg>
+                </div>
+                <input type="text" id="search-input" oninput="handleSearchInput(this.value)" placeholder="Search station, city or country..." class="w-full bg-transparent text-xs text-white placeholder-gray-500 focus:outline-none pr-2 py-1">
             </div>
-            <input type="text" id="search-input" oninput="handleSearchInput(this.value)" placeholder="Search station, city or country..." class="w-full bg-transparent text-xs text-white placeholder-gray-500 focus:outline-none pr-2 py-1">
+            
+            <div id="search-suggestions" class="hidden flex flex-col max-h-[180px] overflow-y-auto no-scrollbar border-t border-gray-800/60 mt-1.5 pt-1"></div>
         </div>
 
         <div id="filter-popover" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col gap-3 animate-textFadeIn">
@@ -398,10 +402,11 @@ function toggleFilterPopover() {
                 btn.classList.remove('bg-white/10', 'text-white');
             }
         }
-        function toggleSearchContainer() {
+       function toggleSearchContainer() {
             const searchContainer = document.getElementById('search-container');
             const btn = document.getElementById('btn-toggle-search');
             const input = document.getElementById('search-input');
+            const suggestions = document.getElementById('search-suggestions');
             
             if (searchContainer.classList.contains('hidden')) {
                 searchContainer.classList.remove('hidden');
@@ -413,14 +418,80 @@ function toggleFilterPopover() {
                 searchContainer.classList.add('hidden');
                 btn.classList.remove('bg-white/10', 'text-white');
                 input.value = '';
+                suggestions.innerHTML = '';
+                suggestions.classList.add('hidden');
                 handleSearchInput('');
             }
         }
 
-        // Verarbeitet die Tastatureingaben in Echtzeit
+        // Berechnet die Google-Style Vorschläge in Echtzeit
         function handleSearchInput(value) {
+            const query = value.trim().toLowerCase();
             currentFilters.searchQuery = value.trim();
-            renderMarkers();
+            const suggestionsContainer = document.getElementById('search-suggestions');
+            
+            // Wenn das Suchfeld leer ist -> Vorschläge verstecken
+            if (!query) {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.classList.add('hidden');
+                renderMarkers();
+                return;
+            }
+
+            // FILTER-MASCHINE: Sucht im Namen, der Stadt und dem Land
+            const matches = locations.filter(loc => 
+                loc.name.toLowerCase().includes(query) || 
+                loc.locationName.toLowerCase().includes(query)
+            ).slice(0, 5); // Maximal die besten 5 Treffer anzeigen (für schlanke Optik)
+
+            if (matches.length === 0) {
+                suggestionsContainer.innerHTML = '<div class="text-[10px] text-gray-500 px-2 py-2 italic">No targets found</div>';
+                suggestionsContainer.classList.remove('hidden');
+            } else {
+                // HTML für die Vorschlagsliste generieren (inkl. Hover-Effekten)
+                suggestionsContainer.innerHTML = matches.map(loc => {
+                    const badgeStyle = loc.category === 'university' ? 'bg-blue-500/10 text-blue-400' : 'bg-emerald-500/10 text-emerald-400';
+                    const label = loc.category === 'university' ? 'Uni' : 'Job';
+                    
+                    return `
+                        <div onclick="clickSearchSuggestion('${loc.name.replace(/'/g, "\\'")}')" 
+                             class="flex justify-between items-center px-2 py-1.5 rounded-lg hover:bg-white/5 cursor-pointer transition duration-150 group">
+                            <div class="flex flex-col min-w-0 pr-2">
+                                <span class="text-xs text-gray-200 group-hover:text-white font-medium truncate">${loc.name}</span>
+                                <span class="text-[10px] text-gray-500 group-hover:text-gray-400 truncate">${loc.locationName}</span>
+                            </div>
+                            <span class="text-[9px] font-bold uppercase tracking-wider px-1 py-0.5 rounded ${badgeStyle} shrink-0">
+                                ${label}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+                suggestionsContainer.classList.remove('hidden');
+            }
+
+            renderMarkers(); // Aktualisiert parallel die Punkte auf der Karte
+        }
+
+        // Der "Click-Handler": Feuert, wenn man auf einen Vorschlag klickt
+        function clickSearchSuggestion(name) {
+            const loc = locations.find(l => l.name === name);
+            if (loc) {
+                // 1. Suchfeld mit dem exakten Namen befüllen & Vorschläge einklappen
+                document.getElementById('search-input').value = loc.name;
+                currentFilters.searchQuery = loc.name;
+                document.getElementById('search-suggestions').classList.add('hidden');
+                
+                // 2. Karte updaten (zeigt nur noch diesen einen Marker)
+                renderMarkers();
+
+                // 3. Direkt dorthin fliegen und die Sidebar mit allen Details öffnen!
+                showDetails(loc);
+                if (window.innerWidth < 768) {
+                    map.panTo([loc.coordinates[0] - 1.2, loc.coordinates[1]], { animate: true, duration: 0.6 });
+                } else {
+                    map.panTo([loc.coordinates[0], loc.coordinates[1] - 4], { animate: true, duration: 0.6 });
+                }
+            }
         }
         // ==========================================
         // SYSTEMFUNKTIONEN (SIDEBAR-STEUERUNG & PARSER)
