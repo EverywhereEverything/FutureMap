@@ -65,16 +65,31 @@
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans relative w-full h-full">
 
-    <div class="absolute top-4 left-1/2 -translate-x-1/2 bg-gray-900/60 backdrop-blur-md p-1 rounded-xl flex gap-1 shadow-[0_10px_30px_rgba(0,0,0,0.4)] z-[1000] w-[90%] max-w-[340px]">
-        <button onclick="filterCategory('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition duration-200">
-            All
-        </button>
-        <button onclick="filterCategory('university')" id="btn-university" class="flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
-            Universities
-        </button>
-        <button onclick="filterCategory('career')" id="btn-career" class="flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
-            Careers
-        </button>
+    <div class="absolute top-4 left-1/2 -translate-x-1/2 bg-gray-900/70 backdrop-blur-md p-2 rounded-2xl flex flex-col gap-2 shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-[1000] w-[90%] max-w-[350px] border border-white/5">
+        
+        <div class="flex gap-1 w-full">
+            <button onclick="changeCategoryFilter('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition duration-200">
+                All
+            </button>
+            <button onclick="changeCategoryFilter('university')" id="btn-university" class="flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
+                Universities
+            </button>
+            <button onclick="changeCategoryFilter('career')" id="btn-career" class="flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
+                Careers
+            </button>
+        </div>
+
+        <div class="flex flex-wrap gap-2 pt-1.5 border-t border-gray-800/60 justify-start items-center px-1">
+            
+            <label class="flex items-center gap-2 cursor-pointer select-none group">
+                <input type="checkbox" id="check-un" onchange="toggleUnFilter(this.checked)" class="sr-only peer">
+                <div class="w-3.5 h-3.5 rounded border border-gray-600 bg-gray-950 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 flex items-center justify-center transition-all duration-150 group-hover:border-gray-400">
+                    <svg class="w-2.5 h-2.5 text-gray-950 stroke-[3.5] hidden peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
+                </div>
+                <span class="text-[10px] font-medium text-gray-400 group-hover:text-gray-200 transition duration-150">🇺🇳 Only UN-affiliated</span>
+            </label>
+
+            </div>
     </div>
 
     <div class="absolute bottom-4 left-4 bg-gray-900/50 backdrop-blur-sm p-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] z-[1000] pointer-events-none hidden md:block">
