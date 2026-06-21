@@ -200,9 +200,12 @@ function onEachCountryFeature(feature, layer) {
             let searchName = countryName.toLowerCase();
             if (searchName.includes("united states")) searchName = "usa";
 
-            // Filtere alle Locations, die zu diesem Land gehören
-            const countryLocations = locations.filter(loc => 
-                loc.locationName.toLowerCase().includes(searchName)
+            const countryLocations = locations.filter(loc => {
+                const matchesCountry = loc.locationName.toLowerCase().includes(searchName);
+                const matchesCategory = currentFilters.category === 'all' || loc.category === currentFilters.category;
+                const matchesUN = !currentFilters.unAffiliated || loc.unAffiliated;
+                
+                return matchesCountry && matchesCategory && matchesUN;
             );
 
             // Fall 1: Keine Einträge für dieses Land vorhanden
@@ -290,6 +293,10 @@ function onEachCountryFeature(feature, layer) {
         L.DomEvent.disableScrollPropagation(sidebar);
 
         let activeMarkers = [];
+        const currentFilters = {
+            category: 'all',
+            unAffiliated: false
+        };
         let currentSelectedLocation = null;
         
         let mobileState = 'closed';
@@ -549,47 +556,61 @@ function onEachCountryFeature(feature, layer) {
             detailsContainer.scrollTop = 0;
         }
 
-        // DESIGN DER NEON-MARKER UND RENDERING
-        function renderMarkers(filter = 'all') {
+        function renderMarkers() {
+            // 1. Alle alten Marker von der Karte entfernen
             activeMarkers.forEach(marker => map.removeLayer(marker));
             activeMarkers = [];
 
+            // 2. Schleife über alle Locations mit dem Ausschlussprinzip
             locations.forEach(loc => {
-                if (filter === 'all' || loc.category === filter) {
-                    const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
-                    const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
-                    
-                    const neonIcon = L.divIcon({
-                        html: `
-                            <div class="relative w-5 h-5 flex items-center justify-center">
-                                <div class="absolute w-full h-full rounded-full ${outerRingColor} animate-ping" style="animation-duration: 4s;"></div>
-                                <div class="w-2 h-2 rounded-full ${innerDotColor} border border-gray-950 z-10"></div>
-                            </div>
-                        `,
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    });
-
-                    const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
-                    marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
-
-                    marker.on('click', () => {
-                        showDetails(loc);
-                        if(window.innerWidth < 768) {
-                            map.panTo([loc.coordinates[0] - 1.2, loc.coordinates[1]], { animate: true, duration: 0.6 });
-                        } else {
-                            map.panTo([loc.coordinates[0], loc.coordinates[1] - 4], { animate: true, duration: 0.6 });
-                        }
-                    });
-
-                    activeMarkers.push(marker);
+                // Check 1: Passt die Hauptkategorie?
+                if (currentFilters.category !== 'all' && loc.category !== currentFilters.category) {
+                    return; // Überspringen
                 }
+
+                // Check 2: Ist der UN-Filter aktiv, aber die Station ist nicht UN-affiliated?
+                if (currentFilters.unAffiliated && !loc.unAffiliated) {
+                    return; // Überspringen
+                }
+
+                // === HIER KANNST DU SPÄTER EINFACH CHECK 3, 4, 5 ERGÄNZEN ===
+
+                // Wenn alle Checks bestanden sind -> Marker wie gewohnt zeichnen:
+                const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
+                const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
+                
+                const neonIcon = L.divIcon({
+                    html: `
+                        <div class="relative w-5 h-5 flex items-center justify-center">
+                            <div class="absolute w-full h-full rounded-full ${outerRingColor} animate-ping" style="animation-duration: 4s;"></div>
+                            <div class="w-2 h-2 rounded-full ${innerDotColor} border border-gray-950 z-10"></div>
+                        </div>
+                    `,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+
+                const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
+                marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
+
+                marker.on('click', () => {
+                    showDetails(loc);
+                    if(window.innerWidth < 768) {
+                        map.panTo([loc.coordinates[0] - 1.2, loc.coordinates[1]], { animate: true, duration: 0.6 });
+                    } else {
+                        map.panTo([loc.coordinates[0], loc.coordinates[1] - 4], { animate: true, duration: 0.6 });
+                    }
+                });
+
+                activeMarkers.push(marker);
             });
         }
 
-        function filterCategory(category) {
-            renderMarkers(category);
-            closeSidebar(); 
+        // NEU: Event-Handler für die oberen Hauptbuttons
+        function changeCategoryFilter(category) {
+            currentFilters.category = category; // Status updaten
+            
+            // UI-Klassen der Knöpfe updaten (wie bisher)
             const buttons = ['all', 'university', 'career'];
             buttons.forEach(btn => {
                 const el = document.getElementById(`btn-${btn}`);
@@ -600,6 +621,16 @@ function onEachCountryFeature(feature, layer) {
             if (targetBtn) {
                 targetBtn.className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
             }
+
+            closeSidebar(); 
+            renderMarkers(); // Karte neu berechnen
+        }
+
+        // NEU: Event-Handler für den UN-Haken
+        function toggleUnFilter(isChecked) {
+            currentFilters.unAffiliated = isChecked; // Status updaten
+            closeSidebar();
+            renderMarkers(); // Karte neu berechnen
         }
 
         // INITIALISIERUNG DER RESPONSIVEN ELEMENTE
