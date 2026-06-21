@@ -67,18 +67,22 @@
 
     <div class="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] w-[90%] max-w-[360px] flex flex-col items-center gap-1.5">
         
-        <div class="bg-gray-900/70 backdrop-blur-md p-1 rounded-xl flex gap-1 w-full border border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-            <button onclick="changeCategoryFilter('all')" id="btn-all" class="flex-[2] py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition duration-200">
+      <div class="bg-gray-900/70 backdrop-blur-md p-1 rounded-xl flex items-center gap-1 w-full border border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <button onclick="changeCategoryFilter('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition duration-200">
                 All
             </button>
-            <button onclick="changeCategoryFilter('university')" id="btn-university" class="flex-[2] py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
+            <button onclick="changeCategoryFilter('university')" id="btn-university" class="flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
                 Universities
             </button>
-            <button onclick="changeCategoryFilter('career')" id="btn-career" class="flex-[2] py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
+            <button onclick="changeCategoryFilter('career')" id="btn-career" class="flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200">
                 Careers
             </button>
             
-            <button onclick="toggleFilterPopover()" id="btn-toggle-popover" class="flex-[1] px-2 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-white/5 rounded-lg transition duration-200 flex items-center justify-center">
+            <!-- Subtile Trennlinie für perfekte optische Ordnung -->
+            <div class="w-px h-4 bg-gray-800/80 mx-1 shrink-0"></div>
+            
+            <!-- Filter-Button als geschütztes, fixes Quadrat isoliert -->
+            <button onclick="toggleFilterPopover()" id="btn-toggle-popover" class="w-8 h-8 shrink-0 text-gray-400 hover:text-gray-200 hover:bg-white/5 rounded-lg transition duration-200 flex items-center justify-center">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"></path>
                 </svg>
