@@ -423,14 +423,11 @@ function toggleFilterPopover() {
                 handleSearchInput('');
             }
         }
-
-        // Berechnet die Google-Style Vorschläge in Echtzeit
-        function handleSearchInput(value) {
+function handleSearchInput(value) {
             const query = value.trim().toLowerCase();
             currentFilters.searchQuery = value.trim();
             const suggestionsContainer = document.getElementById('search-suggestions');
             
-            // Wenn das Suchfeld leer ist -> Vorschläge verstecken
             if (!query) {
                 suggestionsContainer.innerHTML = '';
                 suggestionsContainer.classList.add('hidden');
@@ -438,18 +435,45 @@ function toggleFilterPopover() {
                 return;
             }
 
-            // FILTER-MASCHINE: Sucht im Namen, der Stadt und dem Land
-            const matches = locations.filter(loc => 
+            let suggestionsHtml = '';
+            let hasMatches = false;
+
+            // 1. LÄNDER-SUCHE: Extrahiert alle einzigartigen Ländernamen aus deinen Locations
+            const uniqueCountries = [...new Set(locations.map(loc => {
+                const parts = loc.locationName.split(',');
+                return parts[parts.length - 1].trim();
+            }))];
+
+            // Prüft, ob die Eingabe zu einem Land passt
+            const matchedCountries = uniqueCountries.filter(c => c.toLowerCase().includes(query)).slice(0, 2);
+            
+            if (matchedCountries.length > 0) {
+                hasMatches = true;
+                matchedCountries.forEach(country => {
+                    suggestionsHtml += `
+                        <div onclick="clickCountrySuggestion('${country.replace(/'/g, "\\'")}')" 
+                             class="flex justify-between items-center px-2 py-1.5 rounded-lg hover:bg-white/5 cursor-pointer transition duration-150 group bg-emerald-500/5 mb-1 border border-emerald-500/10">
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-xs text-emerald-400 group-hover:text-emerald-300 font-semibold truncate">Explore ${country}</span>
+                                <span class="text-[9px] text-gray-500">View all regional opportunities</span>
+                            </div>
+                            <span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 shrink-0">
+                                🌍 Country
+                            </span>
+                        </div>
+                    `;
+                });
+            }
+
+            // 2. STATIONEN-SUCHE: Filtert die einzelnen Unis und Jobs (wie bisher)
+            const matchedLocations = locations.filter(loc => 
                 loc.name.toLowerCase().includes(query) || 
                 loc.locationName.toLowerCase().includes(query)
-            ).slice(0, 5); // Maximal die besten 5 Treffer anzeigen (für schlanke Optik)
+            ).slice(0, 4);
 
-            if (matches.length === 0) {
-                suggestionsContainer.innerHTML = '<div class="text-[10px] text-gray-500 px-2 py-2 italic">No targets found</div>';
-                suggestionsContainer.classList.remove('hidden');
-            } else {
-                // HTML für die Vorschlagsliste generieren (inkl. Hover-Effekten)
-                suggestionsContainer.innerHTML = matches.map(loc => {
+            if (matchedLocations.length > 0) {
+                hasMatches = true;
+                suggestionsHtml += matchedLocations.map(loc => {
                     const badgeStyle = loc.category === 'university' ? 'bg-blue-500/10 text-blue-400' : 'bg-emerald-500/10 text-emerald-400';
                     const label = loc.category === 'university' ? 'Uni' : 'Job';
                     
@@ -466,26 +490,31 @@ function toggleFilterPopover() {
                         </div>
                     `;
                 }).join('');
+            }
+
+            // Ergebnisanzeige steuern
+            if (!hasMatches) {
+                suggestionsContainer.innerHTML = '<div class="text-[10px] text-gray-500 px-2 py-2 italic">No targets found</div>';
+                suggestionsContainer.classList.remove('hidden');
+            } else {
+                suggestionsContainer.innerHTML = suggestionsHtml;
                 suggestionsContainer.classList.remove('hidden');
             }
 
-            renderMarkers(); // Aktualisiert parallel die Punkte auf der Karte
+            renderMarkers();
         }
 
-        // Der "Click-Handler": Feuert, wenn man auf einen Vorschlag klickt
+        // Klick-Handler für Einzel-Stationen (wie bisher)
         function clickSearchSuggestion(name) {
             const loc = locations.find(l => l.name === name);
             if (loc) {
-                // 1. Suchfeld mit dem exakten Namen befüllen & Vorschläge einklappen
                 document.getElementById('search-input').value = loc.name;
                 currentFilters.searchQuery = loc.name;
                 document.getElementById('search-suggestions').classList.add('hidden');
                 
-                // 2. Karte updaten (zeigt nur noch diesen einen Marker)
                 renderMarkers();
-
-                // 3. Direkt dorthin fliegen und die Sidebar mit allen Details öffnen!
                 showDetails(loc);
+                
                 if (window.innerWidth < 768) {
                     map.panTo([loc.coordinates[0] - 1.2, loc.coordinates[1]], { animate: true, duration: 0.6 });
                 } else {
@@ -493,6 +522,38 @@ function toggleFilterPopover() {
                 }
             }
         }
+
+        // NEU: Klick-Handler für die Länder-Vorschläge (Simuliert den Karten-Klick!)
+        function clickCountrySuggestion(countryName) {
+            document.getElementById('search-input').value = countryName;
+            currentFilters.searchQuery = countryName;
+            document.getElementById('search-suggestions').classList.add('hidden');
+            
+            // 1. Marker auf der Karte passend aktualisieren
+            renderMarkers();
+            
+            // 2. Das Länder-Submenü in der Sidebar auffächern
+            showCountryOverview(countryName);
+            
+            // 3. KARTEN-ZOOM: Sucht die echten Grenzen aus dem GeoJSON und fliegt dorthin
+            if (geojsonLayer) {
+                let targetLayer = null;
+                let searchName = countryName.toLowerCase();
+                if (searchName === 'usa') searchName = 'united states';
+                
+                geojsonLayer.eachLayer(layer => {
+                    if (layer.feature.properties && layer.feature.properties.name && 
+                        layer.feature.properties.name.toLowerCase().includes(searchName)) {
+                        targetLayer = layer;
+                    }
+                });
+                
+                if (targetLayer) {
+                    map.fitBounds(targetLayer.getBounds(), { animate: true, duration: 1.0 });
+                }
+            }
+        }
+       
         // ==========================================
         // SYSTEMFUNKTIONEN (SIDEBAR-STEUERUNG & PARSER)
         // ==========================================
