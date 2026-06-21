@@ -646,7 +646,7 @@ function onEachCountryFeature(feature, layer) {
             sidebar.style.display = 'none';
         }
 
-        renderMarkers('all');
+        renderMarkers();
         
         window.addEventListener('resize', () => {
             map.invalidateSize();
