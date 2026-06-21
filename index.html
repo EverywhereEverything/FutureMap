@@ -80,7 +80,6 @@
         </div>
 
         <div class="flex flex-wrap gap-2 pt-1.5 border-t border-gray-800/60 justify-start items-center px-1">
-            
             <label class="flex items-center gap-2 cursor-pointer select-none group">
                 <input type="checkbox" id="check-un" onchange="toggleUnFilter(this.checked)" class="sr-only peer">
                 <div class="w-3.5 h-3.5 rounded border border-gray-600 bg-gray-950 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 flex items-center justify-center transition-all duration-150 group-hover:border-gray-400">
@@ -88,8 +87,7 @@
                 </div>
                 <span class="text-[10px] font-medium text-gray-400 group-hover:text-gray-200 transition duration-150">🇺🇳 Only UN-affiliated</span>
             </label>
-
-            </div>
+        </div>
     </div>
 
     <div class="absolute bottom-4 left-4 bg-gray-900/50 backdrop-blur-sm p-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] z-[1000] pointer-events-none hidden md:block">
@@ -106,10 +104,8 @@
     </div>
 
     <div id="sidebar" class="fixed bg-gray-900/95 backdrop-blur-xl z-[1010] apple-transition flex flex-col bottom-0 left-0 w-full h-[90vh] rounded-t-3xl shadow-[0_-20px_40px_rgba(0,0,0,0.6)] md:top-0 md:h-full md:w-[440px] md:rounded-none md:shadow-[30px_0_60px_-15px_rgba(0,0,0,0.6)]" style="will-change: transform, opacity; display: none;">
-        
         <div id="touch-zone" class="w-full shrink-0 select-none cursor-grab active:cursor-grabbing touch-none">
             <div class="w-10 h-1 bg-gray-700/60 rounded-full mx-auto mt-3 mb-1 md:hidden"></div>
-            
             <div class="p-6 pt-3 md:pt-6 pb-4 flex justify-between items-start">
                 <div>
                     <h1 class="text-xl font-bold text-white tracking-wide">Future Compass</h1>
@@ -122,7 +118,6 @@
                 </button>
             </div>
         </div>
-        
         <div id="details-content" class="px-6 pb-6 flex-1 overflow-y-auto no-scrollbar"></div>
     </div>
 
@@ -134,7 +129,18 @@
     <script>
         const isMobile = window.innerWidth < 768;
         
-        // 1. Karte im edlen Dunkelmodus initialisieren
+        // Globale UI- und Filter-Zustände initialisieren
+        let activeMarkers = [];
+        let currentSelectedLocation = null;
+        let mobileState = 'closed';
+        let currentTranslateY = window.innerHeight + 200;
+
+        const currentFilters = {
+            category: 'all',
+            unAffiliated: false
+        };
+        
+        // 1. Karte im Dunkelmodus initialisieren
         const map = L.map('map', { 
             zoomControl: false,
             attributionControl: false 
@@ -147,17 +153,17 @@
         }).addTo(map);
 
         // ==========================================
-        // NEU: INTERAKTIVE LÄNDERGRENZEN (GEOJSON) LOGIK
+        // INTERAKTIVE LÄNDERGRENZEN (GEOJSON) LOGIK
         // ==========================================
         let geojsonLayer;
 
         function defaultCountryStyle(feature) {
           return {
-            fillColor: "#10b981",   // Elegantes Grün passend zum Thema
+            fillColor: "#10b981",
             weight: 1,              
             opacity: 0.2,           
             color: "#10b981",       
-            fillOpacity: 0.0        // Unsichtbar im Normalzustand
+            fillOpacity: 0.0        
           };
         }
 
@@ -166,7 +172,7 @@
           layer.setStyle({
             weight: 1.5,              
             color: "#10b981",       
-            fillOpacity: 0.1        // Leuchtet beim Hovern sanft auf
+            fillOpacity: 0.1        
           });
           if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
             layer.bringToFront();
@@ -178,44 +184,53 @@
             geojsonLayer.resetStyle(e.target);
           }
         }
-function onEachCountryFeature(feature, layer) {
+
+        function onEachCountryFeature(feature, layer) {
           layer.on({
             mouseover: highlightCountry,
             mouseout: resetCountryStyle,
             click: function(e) {
-              // 1. Karte elegant auf das Land zoomen
               map.fitBounds(e.target.getBounds());
-              
-              // 2. Die neue Übersicht für dieses Land in der Sidebar öffnen
               showCountryOverview(feature.properties.name);
             }
           });
         }
 
+        // GeoJSON Grenzen laden
+        fetch('./countries.geo.json') 
+          .then(response => response.json())
+          .then(geoJsonData => {
+            geojsonLayer = L.geoJson(geoJsonData, {
+              style: defaultCountryStyle,
+              onEachFeature: onEachCountryFeature
+            }).addTo(map);
+            geojsonLayer.bringToBack();
+          })
+          .catch(error => console.error("Fehler beim Laden der Ländergrenzen:", error));
+
         // ==========================================
-        // NEU: DIE LANDES-ÜBERSICHTSMASCHINE
+        // DIE DYNAMISCHE LANDES-ÜBERSICHTSMASCHINE
         // ==========================================
         function showCountryOverview(countryName) {
-            // USA-Namensabgleich (GeoJSON nutzt oft "United States", deine Liste "USA")
             let searchName = countryName.toLowerCase();
             if (searchName.includes("united states")) searchName = "usa";
 
+            // Filtert Locations basierend auf Land UND den aktiven Filtern
             const countryLocations = locations.filter(loc => {
                 const matchesCountry = loc.locationName.toLowerCase().includes(searchName);
                 const matchesCategory = currentFilters.category === 'all' || loc.category === currentFilters.category;
                 const matchesUN = !currentFilters.unAffiliated || loc.unAffiliated;
                 
                 return matchesCountry && matchesCategory && matchesUN;
-            );
+            });
 
-            // Fall 1: Keine Einträge für dieses Land vorhanden
             if (countryLocations.length === 0) {
                 detailsContainer.innerHTML = `
                     <div class="animate-textFadeIn">
                         <h2 class="text-xl font-bold text-white tracking-wide">${countryName}</h2>
                         <p class="text-xs text-gray-400 font-medium mt-1 mb-4">No targets mapped yet</p>
                         <p class="text-sm text-gray-400 italic bg-gray-950/40 p-4 rounded-xl leading-relaxed">
-                            Für dieses Land sind aktuell noch keine spezifischen Universitäten oder Karriere-Stationen in deinem Future Compass eingetragen.
+                            Für dieses Land sind aktuell keine passenden Universitäten oder Karriere-Stationen mit den gewählten Filtereinstellungen eingetragen.
                         </p>
                     </div>
                 `;
@@ -223,7 +238,6 @@ function onEachCountryFeature(feature, layer) {
                 return;
             }
 
-            // Fall 2: Einträge vorhanden -> Liste generieren
             const listHtml = countryLocations.map(loc => {
                 const badgeColor = loc.category === 'university' ? 'bg-blue-500/10 text-blue-400' : 'bg-emerald-500/10 text-emerald-400';
                 const borderColor = loc.category === 'university' ? 'hover:border-blue-500/40' : 'hover:border-emerald-500/40';
@@ -243,7 +257,6 @@ function onEachCountryFeature(feature, layer) {
                 `;
             }).join('');
 
-            // Inhalt in die Sidebar injizieren
             detailsContainer.innerHTML = `
                 <div class="animate-textFadeIn">
                     <h2 class="text-xl font-bold text-white tracking-wide">${countryName}</h2>
@@ -254,12 +267,10 @@ function onEachCountryFeature(feature, layer) {
                 </div>
             `;
             
-            // Sidebar ausfahren
             openSidebar();
             detailsContainer.scrollTop = 0;
         }
 
-        // Hilfsfunktion: Macht die Listenelemente klickbar und öffnet deren echte Details
         window.showLocationByName = function(name) {
             const loc = locations.find(l => l.name === name);
             if (loc) {
@@ -267,23 +278,78 @@ function onEachCountryFeature(feature, layer) {
             }
         };
 
-        // Grenzen asynchron laden (verhindert CORS Probleme auf GitHub Pages)
-        fetch('./countries.geo.json') 
-          .then(response => response.json())
-          .then(geoJsonData => {
-            geojsonLayer = L.geoJson(geoJsonData, {
-              style: defaultCountryStyle,
-              onEachFeature: onEachCountryFeature
-            }).addTo(map);
-            
-            // Wichtig: Bringt die interaktiven Flächen in den Hintergrund unter die Marker
-            geojsonLayer.bringToBack();
-          })
-          .catch(error => console.error("Fehler beim Laden der Ländergrenzen:", error));
+        // ==========================================
+        // DYNAMISCHE MATRIX-FILTER LOGIK (MASTER-FILTER)
+        // ==========================================
+        function renderMarkers() {
+            activeMarkers.forEach(marker => map.removeLayer(marker));
+            activeMarkers = [];
 
+            locations.forEach(loc => {
+                if (currentFilters.category !== 'all' && loc.category !== currentFilters.category) {
+                    return; 
+                }
+
+                if (currentFilters.unAffiliated && !loc.unAffiliated) {
+                    return; 
+                }
+
+                const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
+                const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
+                
+                const neonIcon = L.divIcon({
+                    html: `
+                        <div class="relative w-5 h-5 flex items-center justify-center">
+                            <div class="absolute w-full h-full rounded-full ${outerRingColor} animate-ping" style="animation-duration: 4s;"></div>
+                            <div class="w-2 h-2 rounded-full ${innerDotColor} border border-gray-950 z-10"></div>
+                        </div>
+                    `,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+
+                const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
+                marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
+
+                marker.on('click', () => {
+                    showDetails(loc);
+                    if(window.innerWidth < 768) {
+                        map.panTo([loc.coordinates[0] - 1.2, loc.coordinates[1]], { animate: true, duration: 0.6 });
+                    } else {
+                        map.panTo([loc.coordinates[0], loc.coordinates[1] - 4], { animate: true, duration: 0.6 });
+                    }
+                });
+
+                activeMarkers.push(marker);
+            });
+        }
+
+        function changeCategoryFilter(category) {
+            currentFilters.category = category; 
+            
+            const buttons = ['all', 'university', 'career'];
+            buttons.forEach(btn => {
+                const el = document.getElementById(`btn-${btn}`);
+                if (el) el.className = "flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200";
+            });
+            const activeColor = category === 'career' ? 'bg-emerald-600' : 'bg-blue-600';
+            const targetBtn = document.getElementById(`btn-${category}`);
+            if (targetBtn) {
+                targetBtn.className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
+            }
+
+            closeSidebar(); 
+            renderMarkers(); 
+        }
+
+        function toggleUnFilter(isChecked) {
+            currentFilters.unAffiliated = isChecked; 
+            closeSidebar();
+            renderMarkers(); 
+        }
 
         // ==========================================
-        // BESTEHENDE SYSTEMFUNKTIONEN (SIDEBAR & MENÜS)
+        // SYSTEMFUNKTIONEN (SIDEBAR-STEUERUNG & PARSER)
         // ==========================================
         const sidebar = document.getElementById('sidebar');
         const detailsContainer = document.getElementById('details-content');
@@ -291,16 +357,6 @@ function onEachCountryFeature(feature, layer) {
         
         L.DomEvent.disableClickPropagation(sidebar);
         L.DomEvent.disableScrollPropagation(sidebar);
-
-        let activeMarkers = [];
-        const currentFilters = {
-            category: 'all',
-            unAffiliated: false
-        };
-        let currentSelectedLocation = null;
-        
-        let mobileState = 'closed';
-        let currentTranslateY = window.innerHeight + 200;
 
         function getSheetPositions() {
             const viewHeight = window.innerHeight;
@@ -377,14 +433,13 @@ function onEachCountryFeature(feature, layer) {
             }
         }
 
-        // GESTEN-STEUERUNG
+        // TOUCH GESTEN
         let startY = 0;
         let startTranslateY = 0;
         let isDragging = false;
 
         sidebar.addEventListener('touchstart', (e) => {
             if (window.innerWidth >= 768 || mobileState === 'closed') return;
-            
             const isTouchZone = touchZone.contains(e.target);
             const isContentZone = detailsContainer.contains(e.target);
             
@@ -398,7 +453,6 @@ function onEachCountryFeature(feature, layer) {
 
         sidebar.addEventListener('touchmove', (e) => {
             if (window.innerWidth >= 768 || mobileState === 'closed') return;
-            
             const currentY = e.touches[0].clientY;
             const deltaY = currentY - startY;
             const isContentZone = detailsContainer.contains(e.target);
@@ -412,12 +466,8 @@ function onEachCountryFeature(feature, layer) {
 
             if (isDragging) {
                 if (e.cancelable) e.preventDefault(); 
-                
                 let newTranslateY = startTranslateY + deltaY;
-                if (newTranslateY < 0) {
-                    newTranslateY = newTranslateY * 0.25;
-                }
-                
+                if (newTranslateY < 0) newTranslateY = newTranslateY * 0.25;
                 currentTranslateY = newTranslateY;
                 sidebar.style.transform = `translateY(${newTranslateY}px)`;
             }
@@ -426,7 +476,6 @@ function onEachCountryFeature(feature, layer) {
         sidebar.addEventListener('touchend', (e) => {
             if (!isDragging || window.innerWidth >= 768) return;
             isDragging = false;
-            
             const positions = getSheetPositions();
             const distanceToExpanded = Math.abs(currentTranslateY - positions.expanded);
             const distanceToPartial = Math.abs(currentTranslateY - positions.partial);
@@ -444,7 +493,6 @@ function onEachCountryFeature(feature, layer) {
             }
         });
 
-        // PARSER FÜR DIE STRUKTURIERUNGSMASCHINE
         function formatTabContent(text, category) {
             if (!text) return '';
             const sections = text.split('\n\n');
@@ -492,7 +540,6 @@ function onEachCountryFeature(feature, layer) {
 
         function switchTab(tabName) {
             if (!currentSelectedLocation) return;
-            
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
             document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
 
@@ -504,9 +551,7 @@ function onEachCountryFeature(feature, layer) {
 
             const activeBtn = document.getElementById(`tab-btn-${tabName}`);
             if (activeBtn) {
-                const activeStyle = currentSelectedLocation.category === 'university' 
-                    ? 'bg-blue-600 text-white shadow-sm font-semibold' 
-                    : 'bg-emerald-600 text-white shadow-sm font-semibold';
+                const activeStyle = currentSelectedLocation.category === 'university' ? 'bg-blue-600 text-white shadow-sm font-semibold' : 'bg-emerald-600 text-white shadow-sm font-semibold';
                 activeBtn.className = `flex-1 py-1.5 rounded-lg text-center text-xs ${activeStyle} transition-all duration-150`;
             }
         }
@@ -515,9 +560,7 @@ function onEachCountryFeature(feature, layer) {
             currentSelectedLocation = loc;
             const badgeColor = loc.category === 'university' ? 'bg-blue-500/10 text-blue-400' : 'bg-emerald-500/10 text-emerald-400';
             const badgeLabel = loc.category === 'university' ? 'University Track' : 'Career Pathway';
-            const initialActiveTabStyle = loc.category === 'university' 
-                ? 'bg-blue-600 text-white shadow-sm font-semibold' 
-                : 'bg-emerald-600 text-white shadow-sm font-semibold';
+            const initialActiveTabStyle = loc.category === 'university' ? 'bg-blue-600 text-white shadow-sm font-semibold' : 'bg-emerald-600 text-white shadow-sm font-semibold';
 
             detailsContainer.innerHTML = `
                 <div class="flex flex-col h-full animate-textFadeIn">
@@ -551,89 +594,11 @@ function onEachCountryFeature(feature, layer) {
                     </div>
                 </div>
             `;
-            
             openSidebar();
             detailsContainer.scrollTop = 0;
         }
 
-        function renderMarkers() {
-            // 1. Alle alten Marker von der Karte entfernen
-            activeMarkers.forEach(marker => map.removeLayer(marker));
-            activeMarkers = [];
-
-            // 2. Schleife über alle Locations mit dem Ausschlussprinzip
-            locations.forEach(loc => {
-                // Check 1: Passt die Hauptkategorie?
-                if (currentFilters.category !== 'all' && loc.category !== currentFilters.category) {
-                    return; // Überspringen
-                }
-
-                // Check 2: Ist der UN-Filter aktiv, aber die Station ist nicht UN-affiliated?
-                if (currentFilters.unAffiliated && !loc.unAffiliated) {
-                    return; // Überspringen
-                }
-
-                // === HIER KANNST DU SPÄTER EINFACH CHECK 3, 4, 5 ERGÄNZEN ===
-
-                // Wenn alle Checks bestanden sind -> Marker wie gewohnt zeichnen:
-                const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
-                const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
-                
-                const neonIcon = L.divIcon({
-                    html: `
-                        <div class="relative w-5 h-5 flex items-center justify-center">
-                            <div class="absolute w-full h-full rounded-full ${outerRingColor} animate-ping" style="animation-duration: 4s;"></div>
-                            <div class="w-2 h-2 rounded-full ${innerDotColor} border border-gray-950 z-10"></div>
-                        </div>
-                    `,
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10]
-                });
-
-                const marker = L.marker(loc.coordinates, { icon: neonIcon }).addTo(map);
-                marker.bindTooltip(loc.name, { direction: 'top', offset: [0, -8] });
-
-                marker.on('click', () => {
-                    showDetails(loc);
-                    if(window.innerWidth < 768) {
-                        map.panTo([loc.coordinates[0] - 1.2, loc.coordinates[1]], { animate: true, duration: 0.6 });
-                    } else {
-                        map.panTo([loc.coordinates[0], loc.coordinates[1] - 4], { animate: true, duration: 0.6 });
-                    }
-                });
-
-                activeMarkers.push(marker);
-            });
-        }
-
-        // NEU: Event-Handler für die oberen Hauptbuttons
-        function changeCategoryFilter(category) {
-            currentFilters.category = category; // Status updaten
-            
-            // UI-Klassen der Knöpfe updaten (wie bisher)
-            const buttons = ['all', 'university', 'career'];
-            buttons.forEach(btn => {
-                const el = document.getElementById(`btn-${btn}`);
-                if (el) el.className = "flex-1 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 transition duration-200";
-            });
-            const activeColor = category === 'career' ? 'bg-emerald-600' : 'bg-blue-600';
-            const targetBtn = document.getElementById(`btn-${category}`);
-            if (targetBtn) {
-                targetBtn.className = `flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeColor} text-white shadow-sm transition duration-200`;
-            }
-
-            closeSidebar(); 
-            renderMarkers(); // Karte neu berechnen
-        }
-
-        // NEU: Event-Handler für den UN-Haken
-        function toggleUnFilter(isChecked) {
-            currentFilters.unAffiliated = isChecked; // Status updaten
-            closeSidebar();
-            renderMarkers(); // Karte neu berechnen
-        }
-
-        // INITIALISIERUNG DER RESPONSIVEN ELEMENTE
+        // INITIALISIERUNG STARTEN
         if (window.innerWidth >= 768) {
             sidebar.style.transform = 'translateX(-100%)';
             sidebar.style.opacity = '1';
@@ -646,6 +611,7 @@ function onEachCountryFeature(feature, layer) {
             sidebar.style.display = 'none';
         }
 
+        // Marker initial zeichnen
         renderMarkers();
         
         window.addEventListener('resize', () => {
