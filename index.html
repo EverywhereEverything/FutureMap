@@ -65,9 +65,9 @@
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans relative w-full h-full">
 
-    <div class="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] w-[90%] max-w-[360px] flex flex-col items-center gap-1.5">
+   <div class="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] w-[90%] max-w-[360px] flex flex-col items-center gap-1.5">
         
-      <div class="bg-gray-900/70 backdrop-blur-md p-1 rounded-xl flex items-center gap-1 w-full border border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+        <div class="bg-gray-900/70 backdrop-blur-md p-1 rounded-xl flex items-center gap-1 w-full border border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
             <button onclick="changeCategoryFilter('all')" id="btn-all" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition duration-200">
                 All
             </button>
@@ -78,10 +78,14 @@
                 Careers
             </button>
             
-            <!-- Subtile Trennlinie für perfekte optische Ordnung -->
-            <div class="w-px h-4 bg-gray-800/80 mx-1 shrink-0"></div>
+            <div class="w-px h-4 bg-gray-800/80 mx-0.5 shrink-0"></div>
             
-            <!-- Filter-Button als geschütztes, fixes Quadrat isoliert -->
+            <button onclick="toggleSearchContainer()" id="btn-toggle-search" class="w-8 h-8 shrink-0 text-gray-400 hover:text-gray-200 hover:bg-white/5 rounded-lg transition duration-200 flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"></path>
+                </svg>
+            </button>
+
             <button onclick="toggleFilterPopover()" id="btn-toggle-popover" class="w-8 h-8 shrink-0 text-gray-400 hover:text-gray-200 hover:bg-white/5 rounded-lg transition duration-200 flex items-center justify-center">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"></path>
@@ -89,10 +93,18 @@
             </button>
         </div>
 
-       <div id="filter-popover" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col gap-3 animate-textFadeIn">
+        <div id="search-container" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-2 rounded-xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex items-center gap-2 animate-textFadeIn">
+            <div class="text-gray-500 pl-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z"></path>
+                </svg>
+            </div>
+            <input type="text" id="search-input" oninput="handleSearchInput(this.value)" placeholder="Search station, city or country..." class="w-full bg-transparent text-xs text-white placeholder-gray-500 focus:outline-none pr-2 py-1">
+        </div>
+
+        <div id="filter-popover" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col gap-3 animate-textFadeIn">
             <h4 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 border-b border-gray-800/60 pb-1.5">Zusatzfilter</h4>
             
-            <!-- Filter 1: Tax Advantages -->
             <label class="flex items-center gap-2.5 cursor-pointer select-none group">
                 <input type="checkbox" id="check-tax" onchange="toggleTaxFilter(this.checked)" class="sr-only peer">
                 <div class="w-4 h-4 rounded border border-gray-600 bg-gray-950 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 flex items-center justify-center transition-all duration-150 group-hover:border-gray-400">
@@ -148,9 +160,10 @@
         let mobileState = 'closed';
         let currentTranslateY = window.innerHeight + 200;
 
-      const currentFilters = {
+     const currentFilters = {
             category: 'all',
-            taxAdvantage: false
+            taxAdvantage: false,
+            searchQuery: '' // NEU: Speichert das aktuelle Suchwort
         };
         
         // 1. Karte im Dunkelmodus initialisieren
@@ -228,12 +241,17 @@
             let searchName = countryName.toLowerCase();
             if (searchName.includes("united states")) searchName = "usa";
 
-           const countryLocations = locations.filter(loc => {
+          const countryLocations = locations.filter(loc => {
                 const matchesCountry = loc.locationName.toLowerCase().includes(searchName);
                 const matchesCategory = currentFilters.category === 'all' || loc.category === currentFilters.category;
                 const matchesTax = !currentFilters.taxAdvantage || loc.taxAdvantage;
                 
-                return matchesCountry && matchesCategory && matchesTax;
+                // NEU: Such-Check für die Landesliste
+                const matchesSearch = !currentFilters.searchQuery || 
+                    loc.name.toLowerCase().includes(currentFilters.searchQuery.toLowerCase()) ||
+                    loc.locationName.toLowerCase().includes(currentFilters.searchQuery.toLowerCase());
+                
+                return matchesCountry && matchesCategory && matchesTax && matchesSearch;
             });
 
             if (countryLocations.length === 0) {
@@ -305,6 +323,15 @@
                if (currentFilters.taxAdvantage && !loc.taxAdvantage) {
                     return; 
                 }
+                if (currentFilters.searchQuery) {
+                    const query = currentFilters.searchQuery.toLowerCase();
+                    const inName = loc.name.toLowerCase().includes(query);
+                    const inLocation = loc.locationName.toLowerCase().includes(query);
+                    
+                    if (!inName && !inLocation) {
+                        return; // Überspringen, wenn das Wort nirgends vorkommt
+                    }
+                }
 
                 const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
                 const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
@@ -370,6 +397,30 @@ function toggleFilterPopover() {
                 popover.classList.add('hidden');
                 btn.classList.remove('bg-white/10', 'text-white');
             }
+        }
+        function toggleSearchContainer() {
+            const searchContainer = document.getElementById('search-container');
+            const btn = document.getElementById('btn-toggle-search');
+            const input = document.getElementById('search-input');
+            
+            if (searchContainer.classList.contains('hidden')) {
+                searchContainer.classList.remove('hidden');
+                btn.classList.add('bg-white/10', 'text-white');
+                document.getElementById('filter-popover').classList.add('hidden');
+                document.getElementById('btn-toggle-popover').classList.remove('bg-white/10', 'text-white');
+                setTimeout(() => input.focus(), 50);
+            } else {
+                searchContainer.classList.add('hidden');
+                btn.classList.remove('bg-white/10', 'text-white');
+                input.value = '';
+                handleSearchInput('');
+            }
+        }
+
+        // Verarbeitet die Tastatureingaben in Echtzeit
+        function handleSearchInput(value) {
+            currentFilters.searchQuery = value.trim();
+            renderMarkers();
         }
         // ==========================================
         // SYSTEMFUNKTIONEN (SIDEBAR-STEUERUNG & PARSER)
