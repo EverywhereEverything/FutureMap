@@ -625,5 +625,27 @@ const locations = [
     requirements: "⚖️ REGIONAL SPECIALIZATION\n• Focus: Industrial emissions directives, energy grid decarbonization, and defending citizen access to environmental justice.\n• Profile: Seeks highly resilient, analytical legal minds specializing in transboundary pollution and energy transition regulations.",
     process: "🧭 RECRUITMENT\n• Portal: Regular intakes via the Warsaw office portal for legal experts, program assistants, and strategic communications leads.",
     logistics: "💰 CONDITIONS & BALANCE\n• Financials: Subject to Polish national labor codes and local income taxation brackets.\n• Work-Life Balance: Deeply supportive, activist-driven team culture that explicitly counters burnout through flexible hours and mandatory rest periods."
+  },
+  {
+    name: "Center for International Environmental Law (CIEL - Headquarters)",
+    locationName: "Washington D.C., USA",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [38.9045, -77.0320],
+    shortInfo: "Global Environmental & Human Rights Anchor • Washington HQ • Elite legal advocacy targeting international financial institutions (World Bank/IFC) and climate finance safeguards. Fully non-US Bar friendly for international tracks. Strong WLB.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Climate & Energy, Environmental Health, and stopping international funding for fossil fuels.\n• Bar Exam Status: Her nepalesisches Bar-Exam ist für die internationalen Teams ein massiver Gewinn. Da CIEL indigene Völker und lokale Gemeinschaften im Globalen Süden gegen Großprojekte verteidigt, wird genau diese Brücke gesucht.\n• Profile: Requires an advanced international law degree (LL.M.) with a strong foundation in human rights or climate justice frameworks.",
+    process: "🧭 CAPITAL RADAR\n• Entry Vector: Vacancies are published on the central CIEL Careers portal. Highly attractive for 'Staff Attorneys' and 'Legal Fellows' directly post-LL.M.\n• Evaluation: Focuses on non-profit drive, high-level writing skills, and the capacity to critique complex environmental safeguard policies.",
+    logistics: "💰 TAXATION & WORKING CULTURE\n• Financial Package: Salaries are fully subject to US income tax. Standard competitive compensation within the international NGO cluster.\n• Work-Life Balance: Outstanding civil-society culture. Strict core hours, no weekend work policies, and very progressive parental and well-being structures. Highly flexible hybrid/remote models."
+  },
+  {
+    name: "Center for International Environmental Law (CIEL - Europe Hub)",
+    locationName: "Geneva, Switzerland",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [46.2201, 6.1415],
+    shortInfo: "UN & Human Rights Focal Point • Geneva Office • Shifting global trade, plastic treaty negotiations, and toxic chemical regulations within the UN/WTO cluster. Highly open to Global South legal experts. Predictable hours.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: International plastic treaty frameworks, WTO trade law reforms, and interfacing with the UN Human Rights Council.\n• Bar Exam Status: Your national license (Nepal) is 100% sufficient. The focus here lies entirely on multilateral treaty advocacy, international diplomacy, and public international law.\n• Profile: Requires exceptional technical drafting skills in legal English. Knowledge of French or Spanish is a welcome additive asset.",
+    process: "🧭 GENEVA ADVOCACY VECTOR\n• Entry Vector: Managed via the global recruitment loop but assigned directly to the Geneva team. Regular intakes for project-based 'Legal Analysts' and international fellows.\n• Portfolio: Requires a proven academic track record in global environmental governance or international institutional law.",
+    logistics: "💰 CONDITIONS & ENVIRONMENT\n• Financials: Swiss employment contract subject to local taxation. Fair NGO salary adjustments tailored for Geneva's living standards.\n• Work-Life Balance: Deeply progressive, flat-hierarchy team culture. Rigid respect for personal boundaries, generous annual leaves, and automatic compensatory time-off for intense UN negotiation phases (e.g., COP or treaty summits)."
   }
 ];
