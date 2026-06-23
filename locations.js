@@ -483,4 +483,15 @@ const locations = [
     process: "🧭 ENTRY PIPELINES\n• Main Portals: Centralized recruitment via the ILO Jobs platform. Highly renowned for its structured Junior Professional Officer (JPO) sponsorships.\n• Assessment Vector: Strict multi-stage evaluation comprising anonymous technical legal writing tests followed by structured competency-based panel interviews.",
     logistics: "💰 PRIVILEGES & BALANCE\n• Financial Package: Full UN salary scale (P-grade) completely exempt from national income tax, paired with generous post adjustments for Geneva.\n• Work-Life Balance: Exceptional. Rigid electronic flexitime tracking where every hour of overtime is systematically converted into additional leave days. Highly family-friendly infrastructure."
   },
+  {
+    name: "International Atomic Energy Agency (IAEA)",
+    locationName: "Vienna, Austria",
+    category: "career",
+    taxAdvantage: true,
+    coordinates: [48.2348, 16.4162],
+    shortInfo: "Supranational Regulatory Titan • Vienna International Centre • Elite nuclear and energy law frameworks operating in Vienna's famous high-WLB diplomatic cluster.",
+    requirements: "⚖️ LEGAL ROLES & FIELDS\n• Key Departments: Office of Legal Affairs (OLA) — Non-Proliferation and Policy Making Section.\n• Practice Areas: International nuclear law, environmental radiation safeguards, civil liability for nuclear damage, and treaty interpretation.\n\n📊 PREREQUISITES\n• Target Profile: Lawyers with a strong background in environmental law, energy regulations, or general state responsibility frameworks.\n• Language Score: High-level command of English; knowledge of another official UN language (Russian, Arabic, Chinese) is a massive asset.",
+    process: "🧭 VIENNA SELECTION RADAR\n• Direct Tracks: Vacancies posted via the IAEA TALEO system. Excellent entry options through national JPO programs and specialized post-grad fellowships.\n• Testing Matrix: Demands precise technical legal reasoning under timed online assessment conditions before advancing to final interviews.",
+    logistics: "💰 THE VIENNA ADVANTAGE\n• Financial Package: Tax-free UN salaries combined with Austria's high standard of living and localized diplomatic purchasing perks.\n• Work-Life Balance: Legendary. Located at the VIC (UN City), operating on strict core hours with extensive flexitime banking. Renowned for top-tier on-site childcare and parental leave support structures."
+  }
 ];
