@@ -340,4 +340,15 @@ const locations = [
     process: "🧭 SELECTIVE LONDON WINDOW\n• Rolling Track: Applications open in October via the central UCL Postgraduate Portal. The program closes progressively as the global cohort capacity is reached.\n• Submission Strategy: Submitting before Christmas is highly recommended for optimal college and grant matching.",
     logistics: "💰 COMMONWEALTH & INSTITUTIONAL AID\n• UCL Graduate Scholarships: Competitive merit-based partial tuition waivers accessible for international applicants.\n• Chevening Pipelines: Full eligibility for the UK government's flagship global scholarship program covering entire tuition and maintenance.\n\n✈️ BLOOMSBURY ECOSYSTEM\n• Location Advantage: Situated in the historic academic heart of London (Bloomsbury). Direct pedestrian access to the British Library, international legal practices, and major environmental law networks."
   },
+  {
+    name: "University of Amsterdam (UvA)",
+    locationName: "Amsterdam, Netherlands",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [52.3622, 4.9122],
+    shortInfo: "European Climate Law Innovator • Roeterseiland Campus • Premier European destination for international climate litigation, ocean governance, and sustainable EU trade policies.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) in Public International Law - track Environment and Climate Change.\n• Academic Alignment: Strong legal foundation (LL.B.) with an excellent track record in environmental law, European law, or administrative law fields.\n\n📊 METRICS\n• Litigation Focus: Tailored for lawyers interested in the rapidly growing field of international climate court cases and corporate environmental liability.\n• Language Standard: High academic standard required (TOEFL 100 / IELTS 7.0 minimum).",
+    process: "🧭 EUROPEAN INTAKE PIPELINE\n• Target Windows: Processed via the centralized Dutch Studielink portal and the UvA admissions desk starting in October.\n• International Cut-off: Non-EU/EEA applicants must submit their full dossier before January 15th for scholarship integration.",
+    logistics: "💰 DUTCH MERIT POOLS\n• AMS (Amsterdam Merit Scholarship): Highly competitive full or partial tuition grants targeting outstanding non-EU postgraduate talents.\n• Orange Tulip & Holland Scholarships: Excellent eligibility pathways for external international funding networks.\n\n✈️ PROGRESSIVE METROPOLIS\n• Strategic Base: Located on the modern Roeterseiland Campus in Amsterdam. Immediate proximity to international environmental NGOs, corporate sustainability headquarters, and European regulatory hubs."
+  }
 ];
