@@ -526,5 +526,16 @@ const locations = [
     requirements: "⚖️ LEGAL ROLES & FIELDS\n• Core Divisions: Law Division (Environmental Law and Governance Branch), Treaty Secretariats.\n• Bar Exam Status: Nepalese Bar Exam fulfills the national jurisdiction baseline perfectly. No Western qualification needed.\n• Domain Focus: Developing global environmental guidelines, countering transboundary pollution, and supporting national environmental law capacities.",
     process: "🧭 UN INSPIRA VECTOR\n• Main Portals: Centralized tracking via the UN Inspira portal. Highly effective entry point via the UN Young Professionals Programme (YPP) or international JPO sponsorship frameworks.\n• Testing Matrix: Standardized competitive UN legal exams followed by strict competency panel reviews.",
     logistics: "💰 EXPEDITIONARY BENEFITS\n• Financial Package: Tax-free UN professional scale salaries accompanied by substantial post adjustments and expatriate security benefits.\n• WLB Safeguards: Traditional UN Civil Service infrastructure. Rigid compliance with core working hours, extensive annual leave guarantees, and systematic overtime compensation."
+  },
+  {
+    name: "Asian Infrastructure Investment Bank (AIIB)",
+    locationName: "Beijing, China",
+    category: "career",
+    taxAdvantage: true,
+    coordinates: [39.9982, 116.3912],
+    shortInfo: "Lean, Clean and Green MDB • Beijing HQ • Founding Member Track (Nepal). Massive focus on green infrastructure finance and energy transition law. Tax-free & structured hours.",
+    requirements: "⚖️ LEGAL ROLES & FIELDS\n• Core Division: Office of the General Counsel (OGC).\n• Bar Exam Status: Nepalese Bar Exam is fully recognized. Nepal is a founding regional member, providing a significant diversity leverage in selection panels.\n• Domain Focus: Legal structuring of renewable energy infrastructure investments, cross-border grids, and environmental compliance frameworks.",
+    process: "🧭 BEIJING RADAR\n• Main Portals: Applications processed via the central AIIB Career portal. High-value pipelines include the AIIB Graduate Program or specialized legal counsel consultant contracts.\n• Milestones: In-depth transactional legal case study followed by structured panel interviews.",
+    logistics: "💰 MULTILATERAL PRIVILEGES\n• Financial Package: Highly competitive tax-free international salary scales, supplemented by premium relocation and housing allowances.\n• WLB Safeguards: Operates on a strict 'Lean, Clean, Green' institutional mantra. Clear core working hours with active protection against corporate burnout. Overtime is systematically compensated through administrative flexitime."
   }
 ];
