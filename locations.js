@@ -537,5 +537,16 @@ const locations = [
     requirements: "⚖️ LEGAL ROLES & FIELDS\n• Core Division: Office of the General Counsel (OGC).\n• Bar Exam Status: Nepalese Bar Exam is fully recognized. Nepal is a founding regional member, providing a significant diversity leverage in selection panels.\n• Domain Focus: Legal structuring of renewable energy infrastructure investments, cross-border grids, and environmental compliance frameworks.",
     process: "🧭 BEIJING RADAR\n• Main Portals: Applications processed via the central AIIB Career portal. High-value pipelines include the AIIB Graduate Program or specialized legal counsel consultant contracts.\n• Milestones: In-depth transactional legal case study followed by structured panel interviews.",
     logistics: "💰 MULTILATERAL PRIVILEGES\n• Financial Package: Highly competitive tax-free international salary scales, supplemented by premium relocation and housing allowances.\n• WLB Safeguards: Operates on a strict 'Lean, Clean, Green' institutional mantra. Clear core working hours with active protection against corporate burnout. Overtime is systematically compensated through administrative flexitime."
+  },
+  {
+    name: "International Fund for Agricultural Development (IFAD)",
+    locationName: "Rome, Italy",
+    category: "career",
+    taxAdvantage: true,
+    coordinates: [41.8385, 12.4172],
+    shortInfo: "UN Climate Adaptation Fund • Rome HQ • Full UN Member Track (Nepal). Dedicated exclusively to climate-resilient rural transition law. Tax-free & legendary Mediterranean WLB.",
+    requirements: "⚖️ LEGAL ROLES & FIELDS\n• Core Division: Office of the General Counsel (LEG).\n• Bar Exam Status: Fully eligible via the Nepalese Bar Exam. No European legal qualification required.\n• Domain Focus: Legal engineering of international climate adaptation grants, rural energy infrastructure financing, and cross-border environmental development treaties.",
+    process: "🧭 MEDITERRANEAN PIPELINE\n• Main Portals: Recruitment handled via the central IFAD Job Portal. Excellent entry points through national JPO tracks, United Nations Volunteers (UNV) legal placements, or associate expert pools.\n• Evaluation: Technical writing tests on public international financing structures followed by structured panel interviews.",
+    logistics: "💰 ROMAN STABILITY & LEISURE\n• Financial Package: Full UN professional P-grade salary scale completely exempt from national income tax, plus expatriate living adjustments.\n• WLB Safeguards: Famous for having some of the most protected and family-friendly working hours in the entire UN ecosystem. Strict core hours with extensive flexitime, zero weekend culture, and active emphasis on life outside the office."
   }
 ];
