@@ -669,5 +669,27 @@ const locations = [
     requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Water Stewardship (Experimental Lakes Area), climate change adaptation, and sustainable finance tracking.\n• Bar Exam Status: Your national license (Nepal) combined with a western postgraduate degree is highly valued. The focus here is on international institutional governance and advisory tracks.\n• Profile: Demands a rigorous analytical legal mindset comfortable with interdisciplinary policy-making and comparative law frameworks.",
     process: "🧭 CANADIAN PIPELINE\n• Entry Vector: Recruitment is handled globally through the central HR portal. Excellent avenues for research fellowships and policy officer positions.\n• Milestones: Comprehensive portfolio review, data/policy analysis tests, and structured panel interviews.",
     logistics: "💰 CONDITIONS & NORTH AMERICAN LIFE\n• Financial Package: Standard Canadian employment contract subject to national and provincial taxes, with comprehensive healthcare extensions.\n• Work-Life Balance: Traditional Canadian civil-society standards. Rigidly protected working hours, clear boundaries on weekends, and highly supportive hybrid-work environments."
+  },
+  {
+    name: "Institute for European Environmental Policy (IEEP - Europe)",
+    locationName: "Brussels, Belgium",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [50.8413, 4.3725],
+    shortInfo: "The EU Green Deal Architects • Brussels Hub • Core evidence-based research for European institutions. Fully open to international legal/policy experts. Exceptional European WLB.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Agri-food systems, biodiversity, circular economy, and the global trade impacts of the EU Green Deal.\n• Bar Exam Status: An EU bar license is completely irrelevant. The work focuses entirely on policy insight, impact assessments, and regulatory analysis.\n• Profile: Ideal for an analytical legal mind capable of bridging the gap between technical EU law and economic realities in developing nations.",
+    process: "🧭 BRUSSELS HUB PIPELINE\n• Entry Vector: Job openings and specialized Student Placement Programmes are posted directly on the central ieep.eu portal.\n• Milestones: Involves a technical policy analysis case study followed by a structured competencies review with the program leads.",
+    logistics: "💰 BRUSSELS CONDITIONS\n• Financial Package: Belgian employment contract subject to standard national taxation. Includes local transport/eco-cheque systems.\n• Work-Life Balance: Classic European think-tank structure. Rigidly enforced 38-hour work weeks, strong teleworking/hybrid setups (Norrsken House Brussels), and automatic compensatory time-off banking for extra project hours."
+  },
+  {
+    name: "Institute for European Environmental Policy (IEEP - UK)",
+    locationName: "London, United Kingdom",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [51.5186, -0.1420],
+    shortInfo: "UK Sustainability Strategy Center • London Office • Navigating post-Brexit environmental law and international green trade standards. No UK Bar required for policy roles. Protected working hours.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: UK environmental governance, trans-boundary climate policy, and sustainable trade relations.\n• Bar Exam Status: Fully accessible with a recognized national bar (Nepal) combined with an international elite LL.M.\n• Profile: Demands deep legal writing skills, fluency in English, and strong capabilities in comparative legislative research.",
+    process: "🧭 LONDON RADAR\n• Entry Vector: Vacancies are managed via the dedicated ieep.uk career desk, primarily hiring Research Fellows and Policy Officers.\n• Evaluation: Focuses on non-profit drive, academic rigor, and analytical clarity regarding global environmental challenges.",
+    logistics: "💰 UK NGO STANDARDS\n• Financial Package: UK contract fully subject to national income tax, registered with the Charity Commission.\n• Work-Life Balance: Exceptional. Operates on a highly supportive civil-society culture with strict limits on weekly hours (approx. 35-37.5h). Strong institutional protection against burnout and highly flexible hybrid models."
   }
 ];
