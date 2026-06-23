@@ -516,4 +516,15 @@ const locations = [
     process: "🧭 INTAKE VECTOR\n• Main Channels: Directly managed through the GCF Careers portal. Actively recruits international legal specialists and institutional compliance experts.\n• Milestones: Comprehensive resume screening, an intensive legal case-study exam, and a final international board interview.",
     logistics: "💰 PRIVILEGES & RETREAT\n• Financial Package: International salaries are fully exempt from national income tax, supplemented by premium expat housing and relocation brackets.\n• WLB Safeguards: Predictable, highly structured working environment. Strong internal emphasis on mental well-being, parental protection, and fixed operational hours."
   },
+  {
+    name: "UNEP (United Nations Environment Programme)",
+    locationName: "Nairobi, Kenya",
+    category: "career",
+    taxAdvantage: true,
+    coordinates: [-1.2333, 36.8167],
+    shortInfo: "Global Environmental Voice • Nairobi HQ • The absolute core authority for international environmental law. Full UN status, tax-exempt salaries, and rigid work-hour protection.",
+    requirements: "⚖️ LEGAL ROLES & FIELDS\n• Core Divisions: Law Division (Environmental Law and Governance Branch), Treaty Secretariats.\n• Bar Exam Status: Nepalese Bar Exam fulfills the national jurisdiction baseline perfectly. No Western qualification needed.\n• Domain Focus: Developing global environmental guidelines, countering transboundary pollution, and supporting national environmental law capacities.",
+    process: "🧭 UN INSPIRA VECTOR\n• Main Portals: Centralized tracking via the UN Inspira portal. Highly effective entry point via the UN Young Professionals Programme (YPP) or international JPO sponsorship frameworks.\n• Testing Matrix: Standardized competitive UN legal exams followed by strict competency panel reviews.",
+    logistics: "💰 EXPEDITIONARY BENEFITS\n• Financial Package: Tax-free UN professional scale salaries accompanied by substantial post adjustments and expatriate security benefits.\n• WLB Safeguards: Traditional UN Civil Service infrastructure. Rigid compliance with core working hours, extensive annual leave guarantees, and systematic overtime compensation."
+  }
 ];
