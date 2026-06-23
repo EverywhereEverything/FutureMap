@@ -647,5 +647,27 @@ const locations = [
     requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: International plastic treaty frameworks, WTO trade law reforms, and interfacing with the UN Human Rights Council.\n• Bar Exam Status: Your national license (Nepal) is 100% sufficient. The focus here lies entirely on multilateral treaty advocacy, international diplomacy, and public international law.\n• Profile: Requires exceptional technical drafting skills in legal English. Knowledge of French or Spanish is a welcome additive asset.",
     process: "🧭 GENEVA ADVOCACY VECTOR\n• Entry Vector: Managed via the global recruitment loop but assigned directly to the Geneva team. Regular intakes for project-based 'Legal Analysts' and international fellows.\n• Portfolio: Requires a proven academic track record in global environmental governance or international institutional law.",
     logistics: "💰 CONDITIONS & ENVIRONMENT\n• Financials: Swiss employment contract subject to local taxation. Fair NGO salary adjustments tailored for Geneva's living standards.\n• Work-Life Balance: Deeply progressive, flat-hierarchy team culture. Rigid respect for personal boundaries, generous annual leaves, and automatic compensatory time-off for intense UN negotiation phases (e.g., COP or treaty summits)."
+  },
+  {
+    name: "International Institute for Sustainable Development (IISD - Europe)",
+    locationName: "Geneva, Switzerland",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [46.2198, 6.1432],
+    shortInfo: "Elite Economic & Climate Policy Hub • Geneva Office • Shifting WTO trade rules and international investment treaties to shield green transitions. Fully non-EU Bar friendly. Exceptional academic environment.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Economic Law and Policy, investment treaty reforms, and fossil fuel subsidy tracking.\n• Bar Exam Status: Perfect match for her nepalesisches Bar-Exam. IISD does not litigate in local courts; they advise sovereign governments on treaty negotiations. Her lived insight into a developing economy is a massive intellectual asset.\n• Profile: Requires an advanced international legal background (LL.M. in International Economic or Environmental Law) and elite policy drafting skills.",
+    process: "🧭 GENEVA ADVOCACY VECTOR\n• Entry Vector: Direct applications via the IISD Careers site. They continuously look for 'International Law Advisors' and 'Policy Analysts' to support Global South delegations.\n• Evaluation: Heavy focus on the ability to unpack complex investment chapters and translate them into sustainable national strategies.",
+    logistics: "💰 TAXATION & WORKING CULTURE\n• Financial Package: Swiss employment contract subject to local income taxes. Competitive, fair compensation tailored for Geneva's non-profit sector.\n• Work-Life Balance: Outstanding think-tank stability. Highly predictable 40-hour weeks (except during peak UN COP summits), very strong remote-work structures, and an explicit institutional focus on preventing burnout."
+  },
+  {
+    name: "International Institute for Sustainable Development (IISD - Headquarters)",
+    locationName: "Winnipeg, Canada",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [49.8951, -97.1384],
+    shortInfo: "Global Institutional Anchor • Winnipeg HQ • The engine behind global water security, clean energy transitions, and resilient infrastructure standards. High-tier research focus and great WLB.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Water Stewardship (Experimental Lakes Area), climate change adaptation, and sustainable finance tracking.\n• Bar Exam Status: Your national license (Nepal) combined with a western postgraduate degree is highly valued. The focus here is on international institutional governance and advisory tracks.\n• Profile: Demands a rigorous analytical legal mindset comfortable with interdisciplinary policy-making and comparative law frameworks.",
+    process: "🧭 CANADIAN PIPELINE\n• Entry Vector: Recruitment is handled globally through the central HR portal. Excellent avenues for research fellowships and policy officer positions.\n• Milestones: Comprehensive portfolio review, data/policy analysis tests, and structured panel interviews.",
+    logistics: "💰 CONDITIONS & NORTH AMERICAN LIFE\n• Financial Package: Standard Canadian employment contract subject to national and provincial taxes, with comprehensive healthcare extensions.\n• Work-Life Balance: Traditional Canadian civil-society standards. Rigidly protected working hours, clear boundaries on weekends, and highly supportive hybrid-work environments."
   }
 ];
