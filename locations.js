@@ -350,5 +350,60 @@ const locations = [
     requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) in Public International Law - track Environment and Climate Change.\n• Academic Alignment: Strong legal foundation (LL.B.) with an excellent track record in environmental law, European law, or administrative law fields.\n\n📊 METRICS\n• Litigation Focus: Tailored for lawyers interested in the rapidly growing field of international climate court cases and corporate environmental liability.\n• Language Standard: High academic standard required (TOEFL 100 / IELTS 7.0 minimum).",
     process: "🧭 EUROPEAN INTAKE PIPELINE\n• Target Windows: Processed via the centralized Dutch Studielink portal and the UvA admissions desk starting in October.\n• International Cut-off: Non-EU/EEA applicants must submit their full dossier before January 15th for scholarship integration.",
     logistics: "💰 DUTCH MERIT POOLS\n• AMS (Amsterdam Merit Scholarship): Highly competitive full or partial tuition grants targeting outstanding non-EU postgraduate talents.\n• Orange Tulip & Holland Scholarships: Excellent eligibility pathways for external international funding networks.\n\n✈️ PROGRESSIVE METROPOLIS\n• Strategic Base: Located on the modern Roeterseiland Campus in Amsterdam. Immediate proximity to international environmental NGOs, corporate sustainability headquarters, and European regulatory hubs."
+  },
+  {
+    name: "Maastricht University (Faculty of Law)",
+    locationName: "Maastricht, Netherlands",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [50.8504, 5.6883],
+    shortInfo: "Pioneer of Problem-Based Learning • Maastricht Campus • World-renowned international classroom focusing on the legal complexities of globalization and corporate social responsibility.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in Globalisation and Law (General Track or specialized profiles in Human Rights or Corporate Law).\n• Academic Baseline: Fully accredited Bachelor of Laws (LL.B.) from a research university with a strong transcript.\n\n📊 SKILLS & COMPETENCIES\n• Interactive Mindset: Highly tailored for students who thrive in small-scale, debate-driven tutorial groups (maximum 19 students).\n• Language Metric: High standardized English proficiency required (TOEFL 100 or IELTS 7.0 minimum).",
+    process: "🧭 SUBMISSION TRACK\n• Application Interface: Managed via the Dutch central Studielink portal followed by the university's MyUM system.\n• Key Timelines: The hard deadline for non-EU/EEA applicants is strictly April 30th, while EU/EEA students have until June 1st.",
+    logistics: "💰 FELLOWSHIP NETWORKS\n• UM High Potential Scholarship: Highly competitive full funding package covering both tuition waivers and monthly living stipends for top non-EU talents.\n• Statutory Rates: Highly attractive EU/EEA statutory tuition fee structures compared to Anglo-American options.\n\n✈:// CENTRAL EUROPEAN LOCATION\n• Campus Vibe: Based in a beautifully restored historic building in the center of Maastricht. Perfect geographic gateway close to Brussels, Luxembourg, and major European governance hubs."
+  },
+  {
+    name: "Tilburg University (Tilburg Law School)",
+    locationName: "Tilburg, Netherlands",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [51.5627, 5.0441],
+    shortInfo: "Top-Tier Dutch Research Faculty • Montesquieu Campus • Celebrated for its unique Thesis Circles and advanced specialized tracks in Environmental Law and Justice.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in International and European Law (with targeted specializations like Environmental Law & Justice or Law and World-Ordering).\n• Profile Matrix: Solid qualifying law degree with high analytical aptitude in public international frameworks.\n\n📊 ADVANCED TRAITS\n• Research Focus: Best suited for legal minds targeting policy think-tanks, international courts, or European governance institutions.\n• Language Asset: Advanced academic English proficiency (TOEFL 90 / IELTS 6.5 minimum).",
+    process: "🧭 ENROLLMENT STEPS\n• System Vector: Processed through the centralized Studielink platform with roll-out opening in October.\n• Target Milestone: Early application by February 1st is mandatory to be eligible for university-backed merit scholarships.",
+    logistics: "💰 ACADEMIC SUPPORT POOLS\n• Tilburg Support Fund: Merit-integrated partial tuition waivers and institutional scholarship paths for exceptional global legal talents.\n• Thesis Circles: Seamless integration of thesis writing with year-round supervisor and peer support groups, maximizing graduation success rates.\n\n✈:// NORDIC-STYLE CAMPUS\n• Environment: Based in the modern Montesquieu Building. A highly active, compact campus setup deeply connected to the broader Dutch and European legal networks."
+  },
+  {
+    name: "University of Oslo (Faculty of Law)",
+    locationName: "Oslo, Norway",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [59.9142, 10.7335],
+    shortInfo: "Scandinavian Peace & Climate Pioneer • Oslo Campus • Celebrated for its specialized tracks in International Economic Law, Sustainable Development, and global climate litigation networks.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) in Public International Law (Tracks include International Economic Law & Sustainable Development or Gender, Peace, Development & Environment).\n• Foundation: A recognized Bachelor's degree in Law or equivalent high-ranking national legal qualifications.\n\n📊 COMPETENCY PROFILE\n• Policy Depth: Focuses heavily on context-based linkages between domestic enforcement and supranationally governed global trends.\n• Language Asset: Strong English command matching standard Nordic academic verification metrics.",
+    process: "🧭 ADMISSIONS VECTOR\n• Portal Route: Handled directly through the university's application portal for international self-financing students.\n• Strict Windows: The application timeframe for international postgraduates typically opens in October and closes tightly by December 1st.",
+    logistics: "💰 FINANCING MATRIX\n• Fee Adjustments: Direct orientation via Norway's general public university framework (check specific updated institutional tuition regulations via uio.no/tuition).\n• Academic Lunches: Renowned for its vibrant series of international public law lunches and exclusive guest lectures featuring global scholars.\n\n✈:// FJORD LEVEL ACCESS\n• Location: Situated in the historic downtown campus along Karl Johans gate. Direct access to Norway's flagship environmental ministries, maritime clusters, and global peace mediation entities."
+  },
+  {
+    name: "King's College London (The Dickson Poon School of Law)",
+    locationName: "London, United Kingdom",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [51.5118, -0.1171],
+    shortInfo: "Premium Legal Heart of London • Somerset House East Wing • Globally acclaimed for its cutting-edge Transnational Law pathway and deep integration with London's elite courts and corporate practices.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: The King's LLM (Master of Laws), offering 9 specialized pathways including Transnational Law, International Financial Law, or Competition Law.\n• Academic Supertier: Requires a clear high 2:1 honors law degree (minimum 65% in the UK marking scheme) or global equivalent.\n\n📊 ADMISSION VECTOR\n• Exceptional Profiles: Extensive professional legal experience (minimum 3 years) may exceptionally balance standard academic metrics.\n• Language Excellence: Flawless professional command (IELTS 7.5 minimum with no sub-score below 7.0).",
+    process: "🧭 LONDON TARGET CYCLES\n• Strategy Track: Operates on a highly competitive rolling selection system via the King's Apply portal starting in October.\n• Cut-Off Benchmarks: Due to immense global application volume, early submission before January is strongly recommended to secure positions.\n\n📝 PORTFOLIO ASSETS\n• Core Dossier: Comprehensive academic transcripts, a deeply analytical personal statement, and authoritative professional or academic references.",
+    logistics: "💰 FELLOWSHIPS & GOVERNMENT FINANCING\n• Dickson Poon Scholarships: Highly prestigious institutional awards offering substantial tuition remissions for transformative global law talents.\n• Chevening Partnerships: Fully compatible with global flagship funding tracks for future administrative and diplomatic leaders.\n\n✈:// STRAND CAMPUS GATEWAY\n• Location: Based in the magnificent Somerset House East Wing on the Strand. Literally minutes away from the Royal Courts of Justice and global elite law firms."
+  },
+  {
+    name: "Université Paris-Panthéon-Assas",
+    locationName: "Paris, France",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [48.8459, 2.3343],
+    shortInfo: "Undisputed Sorbonne of French Law • Paris Campus • France's premier legal institution, boasting an elite international reputation in European Law and global arbitration.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in European Law or International Business Law (administered via Assas International).\n• Profile Blueprint: Holds a high-ranking foundational degree in law (LL.B. or equivalent) with exceptional marks in European or international public law modules.\n\n📊 COMPLIANCE METRICS\n• Language Asset: The program is taught entirely in English (TOEFL 100 or IELTS 7.0 minimum). French language tracks are available as an additive option.\n• Analytical Prowess: Requires strong competencies in comparative legal systems and transnational corporate structures.",
+    process: "🧭 SELECTION DOSSIER\n• Assessment Route: Highly competitive dossier review process based on academic transcripts, motivation files, and professional reference reviews.\n• Interview Vector: Shortlisted candidates may undergo an intensive panel interview to determine final cohort confirmation.\n\n📅 TIMELINE\n• Core Windows: Applications open in early winter with key selection rounds finalizing through March and April.",
+    logistics: "💰 CONTINENTAL PRESTIGE NETWORKS\n• Institutional Tracks: Direct access to European double-degree agreements, specialized research institutes, and elite network mentorship pools.\n• Alumnic Leverage: Join an elite global network of over 100,000 legal alumni occupying premier positions in multilateral agencies and supreme courts.\n\n✈:// THE LATIN QUARTER\n• Campus Hub: Based in the historic core of legal Paris (Rue d'Assas and Rue Saint-Guillaume). Immediate proximity to the French supreme courts, international arbitration chambers, and European policy circles."
   }
 ];
