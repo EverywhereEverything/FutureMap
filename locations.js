@@ -504,5 +504,16 @@ const locations = [
     requirements: "⚖️ LEGAL ROLES & FIELDS\n• Bar Exam Status: Nepalese Bar Exam fulfills the national jurisdiction requirement completely. No European or Western qualification required.\n• Domain Focus: Core alignment with environmental & energy law. Direct involvement in designing national climate legislation, Article 6 carbon markets, and green financial structures.\n\n📊 REGIONAL SYNERGY\n• High Value Profile: GGGI is actively developing green bond frameworks directly in Nepal. A native background combined with an international elite LL.M. is a massive competitive multiplier.",
     process: "🧭 APPLICATION PIPELINE\n• System Route: All open positions are managed and processed through the official GGGI ERP recruitment portal.\n• Target Grades: Ideal for Associate Legal Officer, Policy Analyst, or Sustainable Finance Specialist positions.\n\n📝 EVALUATION MATRIX\n• Selection Vector: Multi-stage merit review focusing heavily on structural legal text analysis and practical regulatory solution design for developing economies.",
     logistics: "💰 BENEFITS & WORK-LIFE BALANCE\n• Financial Package: Salaries enjoy full international organization privileges, meaning complete exemption from national income tax, plus global insurance.\n• WLB Safeguards: Highly regulated civil-service working hours. Overtime hours are tracked and systematically banked into additional leave days. Strong institutional focus on employee well-being and avoiding burnout.\n\n✈️ SEOUL ECOSYSTEM\n• Corporate Environment: Located at the progressive HQ in Seoul. Offers a modern, international workplace closely linked to major Asian-pacific development funds and green technology clusters."
-  }
+  },
+  {
+    name: "Green Climate Fund (GCF)",
+    locationName: "Incheon, South Korea",
+    category: "career",
+    taxAdvantage: true,
+    coordinates: [37.3942, 126.6394],
+    shortInfo: "World's Largest Dedicated Climate Fund • Songdo HQ • Strategic focus on funding green transitions in developing economies (Nepal is an active recipient). Tax-free and highly regulated.",
+    requirements: "⚖️ LEGAL ROLES & FIELDS\n• Core Division: Office of the General Counsel (OGC).\n• Bar Exam Status: Fully recognized national bar admission (Nepal). Essential focus on candidates who understand the legal realities of the Global South.\n• Domain Focus: Legal structuring of multi-million dollar green infrastructure grants, international funding agreements, and environmental risk compliance.",
+    process: "🧭 INTAKE VECTOR\n• Main Channels: Directly managed through the GCF Careers portal. Actively recruits international legal specialists and institutional compliance experts.\n• Milestones: Comprehensive resume screening, an intensive legal case-study exam, and a final international board interview.",
+    logistics: "💰 PRIVILEGES & RETREAT\n• Financial Package: International salaries are fully exempt from national income tax, supplemented by premium expat housing and relocation brackets.\n• WLB Safeguards: Predictable, highly structured working environment. Strong internal emphasis on mental well-being, parental protection, and fixed operational hours."
+  },
 ];
