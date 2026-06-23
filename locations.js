@@ -548,5 +548,82 @@ const locations = [
     requirements: "⚖️ LEGAL ROLES & FIELDS\n• Core Division: Office of the General Counsel (LEG).\n• Bar Exam Status: Fully eligible via the Nepalese Bar Exam. No European legal qualification required.\n• Domain Focus: Legal engineering of international climate adaptation grants, rural energy infrastructure financing, and cross-border environmental development treaties.",
     process: "🧭 MEDITERRANEAN PIPELINE\n• Main Portals: Recruitment handled via the central IFAD Job Portal. Excellent entry points through national JPO tracks, United Nations Volunteers (UNV) legal placements, or associate expert pools.\n• Evaluation: Technical writing tests on public international financing structures followed by structured panel interviews.",
     logistics: "💰 ROMAN STABILITY & LEISURE\n• Financial Package: Full UN professional P-grade salary scale completely exempt from national income tax, plus expatriate living adjustments.\n• WLB Safeguards: Famous for having some of the most protected and family-friendly working hours in the entire UN ecosystem. Strict core hours with extensive flexitime, zero weekend culture, and active emphasis on life outside the office."
+  },
+  {
+    name: "ClientEarth (Headquarters)",
+    locationName: "London, United Kingdom",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [51.5185, -0.0763],
+    shortInfo: "Global Legal Headquarters • London Office • Elite hub for international corporate accountability and landmark climate litigation. Fully compatible with non-EU bar admissions (Nepal) for research/policy tracks. Strict 35h week.",
+    requirements: "⚖️ REGIONAL SPECIALIZATION\n• Focus: Global corporate liability, fossil fuel retirement, and UK High Court strategic litigation.\n• Profile: Requires an elite international law background (LL.M.). Native bar admission (Nepal) is highly valued within the international treaty and climate finance teams.",
+    process: "🧭 RECRUITMENT\n• Portal: Centralized application via the ClientEarth UK portal. Regularly features specific 'Legal Analyst' and 'Climate Fellowship' roles.",
+    logistics: "💰 CONDITIONS & BALANCE\n• Financials: Fully subject to UK income tax. Very competitive within the non-profit sector.\n• Work-Life Balance: Strict 35-hour weeks, rigid overtime protection, and high hybrid-work flexibility (up to 80% remote)."
+  },
+  {
+    name: "ClientEarth (Germany)",
+    locationName: "Berlin, Germany",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [52.5200, 13.4050],
+    shortInfo: "German Environmental Vanguard • Berlin Office • Focused on federal clean air litigation and coal phase-out legal frameworks. Ideal geographic alignment for strategic career planning in Germany.",
+    requirements: "⚖️ REGIONAL SPECIALIZATION\n• Focus: German administrative law interventions, renewable energy grid integration, and European environmental compliance.\n• Profile: While German court litigation requires local qualifications, international policy, energy transition, and supply-chain tracks are fully accessible with a non-EU bar and a top LL.M.",
+    process: "🧭 RECRUITMENT\n• Portal: Managed via the German branch desk. Positions range from 'Law & Policy Advisors' to specialized project associates.",
+    logistics: "💰 CONDITIONS & BALANCE\n• Financials: Subject to standard German taxation, featuring strong social securities.\n• Work-Life Balance: Strict enforcement of regulated European working hours, zero weekend culture, and extensive remote/hybrid flexibility."
+  },
+  {
+    name: "ClientEarth (EU Core)",
+    locationName: "Brussels, Belgium",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [50.8435, 4.3821],
+    shortInfo: "European Policy & Regulation Center • Brussels Office • Shaping the vanguard of the EU Green Deal, deforestation-free trade laws, and corporate sustainability due diligence directives.",
+    requirements: "⚖️ REGIONAL SPECIALIZATION\n• Focus: Drafting EU regulatory proposals, environmental democracy advocacy, and lobbying European institutional frameworks.\n• Profile: High demand for international minds capable of analyzing how EU environmental laws (like carbon border adjustments) impact developing economies like South Asia.",
+    process: "🧭 RECRUITMENT\n• Portal: Highly active intake hub via the Brussels EU portal. Continuous openings for legal policy advisors and corporate rules specialists.",
+    logistics: "💰 CONDITIONS & BALANCE\n• Financials: Belgian contract subject to local taxation, supplemented by standard local public transport and eco-cheques.\n• Work-Life Balance: Highly structured 38-hour week limitations with automated administrative time-off banking for extra project workloads."
+  },
+  {
+    name: "ClientEarth (China)",
+    locationName: "Beijing, China",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [39.9042, 116.4074],
+    shortInfo: "Asian Transition Pioneer • Beijing Office • Working directly with regional regulators since 2016 to accelerate green infrastructure standards and strengthen the environmental rule of law.",
+    requirements: "⚖️ REGIONAL SPECIALIZATION\n• Focus: EU-China environmental projects, green supply chains, and building legal capacity for sustainability transitions.\n• Profile: Tailored for legal experts from the region. A native understanding of Asian administrative structures mixed with a western elite LL.M. is a massive competitive asset.",
+    process: "🧭 RECRUITMENT\n• Portal: Special application loop via ClientEarth Asia. Heavily focused on cross-border legal advisors and policy experts.",
+    logistics: "💰 CONDITIONS & BALANCE\n• Financials: Local international contract subject to national regulations.\n• Work-Life Balance: Operates under a highly collaborative international framework that actively limits local overtime pressures to maintain Western civil-society standards."
+  },
+  {
+    name: "ClientEarth (Japan)",
+    locationName: "Tokyo, Japan",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [35.6762, 139.6503],
+    shortInfo: "East-Asian Finance & Energy Hub • Tokyo Office • Focused on steering corporate investment strategies away from fossil fuels and towards clean-tech grid transitions across Asia.",
+    requirements: "⚖️ REGIONAL SPECIALIZATION\n• Focus: Sustainable corporate finance regulation, investor-state transparency, and trans-pacific climate policy mapping.\n• Profile: Ideal for Asian legal professionals aiming to influence massive regional investment funds and transition laws without needing a local Japanese bar.",
+    process: "🧭 RECRUITMENT\n• Portal: Job postings handled via the expanding Asia & Pacific programmatic desks. Focus on legal analysts in climate finance.",
+    logistics: "💰 CONDITIONS & BALANCE\n• Financials: Fully subject to national Japanese taxation with standard expat protections.\n• Work-Life Balance: Rigid corporate culture protections. Despite Tokyo's intensive business environment, ClientEarth strictly enforces its global well-being and flexible working hour policies."
+  },
+  {
+    name: "ClientEarth (Spain)",
+    locationName: "Madrid, Spain",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [40.4168, -3.7038],
+    shortInfo: "Mediterranean & Marine Protection Hub • Madrid Office • Leading legal interventions for biodiversity conservation, fisheries management, and coastal ecosystem climate resilience.",
+    requirements: "⚖️ REGIONAL SPECIALIZATION\n• Focus: EU common fisheries policy enforcement, marine habitat litigation, and Mediterranean climate adaptation laws.\n• Profile: Open to transnational law graduates focusing on international environmental law and state responsibility regarding natural resources.",
+    process: "🧭 RECRUITMENT\n• Portal: Positions listed under the European regional desk, primarily targeting 'Juristas' and research fellows in ocean governance.",
+    logistics: "💰 CONDITIONS & BALANCE\n• Financials: Standard Spanish contract subject to national income tax and local health insurances.\n• Work-Life Balance: Exceptional Mediterranean life balance, strictly protecting annual leaves, flexitime core windows, and hybrid setups."
+  },
+  {
+    name: "ClientEarth (Poland)",
+    locationName: "Warsaw, Poland",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [52.2297, 21.0122],
+    shortInfo: "Eastern European Energy Battleground • Warsaw Office • Famous for high-stakes litigation against massive coal-fired power plants and driving regional transition compliance.",
+    requirements: "⚖️ REGIONAL SPECIALIZATION\n• Focus: Industrial emissions directives, energy grid decarbonization, and defending citizen access to environmental justice.\n• Profile: Seeks highly resilient, analytical legal minds specializing in transboundary pollution and energy transition regulations.",
+    process: "🧭 RECRUITMENT\n• Portal: Regular intakes via the Warsaw office portal for legal experts, program assistants, and strategic communications leads.",
+    logistics: "💰 CONDITIONS & BALANCE\n• Financials: Subject to Polish national labor codes and local income taxation brackets.\n• Work-Life Balance: Deeply supportive, activist-driven team culture that explicitly counters burnout through flexible hours and mandatory rest periods."
   }
 ];
