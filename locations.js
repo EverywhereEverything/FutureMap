@@ -273,5 +273,16 @@ const locations = [
     requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) with absolute access to the Sabin Center for Climate Change Law and the Columbia Center on Sustainable Investment (CCSI).\n• Selectivity Metrics: Elite academic parameters matching the absolute top tier of international legal applicants.\n\n📊 CRITERIA\n• Professional Focus: Prior academic research or professional experience in climate litigation, carbon trading markets, or energy infrastructure investments is heavily favored.\n• Language Mastery: Superior technical score benchmarks (TOEFL 105 minimum required).",
     process: "🧭 IVY APPLICATION TIMELINE\n• Single Portal: Processed via the LSAC electronic platform starting in September.\n• Priority Track: International admissions cut-off falls strictly on December 1st for the subsequent fall enrollment term.",
     logistics: "💰 INSTITUTIONAL AID NETWORKS\n• Merit Fellowships: Automatic review for prestigious named fellowships (e.g., Appel Fellowships) providing partial to full tuition adjustments based on academic excellence.\n• Need-Integrated Assistance: Dedicated loan-repayment assistance programs (LRAP) for alumni pursuing immediate careers in international public interest or UN organizations.\n\n✈️ METROPOLITAN PROXIMITY\n• Upper Manhattan Campus: Located in Morningside Heights, NYC. Offers a highly competitive, fast-tracked Ivy League environment with direct subway access to the United Nations Headquarters, global banking sectors, and international legal think tanks."
+  },
+  {
+    name: "Stanford Law School",
+    locationName: "Stanford, California, USA",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [37.4260, -122.1673],
+    shortInfo: "Ultra-Exclusive Silicon Valley Elite • Stanford Campus • Extremely small cohort size (approx. 15-20 students per track) with an intensive focus on environmental law and tech policy.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in Environmental Law and Policy.\n• Cohort Selectivity: One of the most selective programs globally; strictly requires a spectacular academic record and proven leadership impact.\n\n📊 CRITERIA\n• Professional Background: Prerequisite of several years of professional legal experience in environmental agencies, international organizations, or specialized firms.\n• Language Mastery: Flawless academic and professional English proficiency (TOEFL 100 minimum required).",
+    process: "🧭 DEADLINE VECTOR\n• Single Window: Applications open in September and close strictly in early December.\n• Central Portal: Handled completely via the LSAC electronic platform, including rigorous credentials evaluation.",
+    logistics: "💰 FELLOWSHIPS & GRANTS\n• Knight-Hennessy Scholars: Access to the university-wide, fully-funded leadership program covering entire tuition, living stipends, and travel grants.\n• Graduate Financial Aid: Direct, competitive merit-based fellowships adjusted via institutional law school funds.\n\n✈️ THE SILICON VALLEY HUB\n• Environment: Located on the historic Stanford campus in the heart of Northern California's innovation ecosystem. Combines intense, high-level research with unique access to global tech and climate solution task forces."
   }
 ];
