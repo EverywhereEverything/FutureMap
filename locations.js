@@ -317,5 +317,27 @@ const locations = [
     requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) — intensely individualized and strictly limited to around 25-30 exceptional students worldwide per year.\n• Academic Supertier: Demands a flawless academic record, typically targeting the absolute top 1-2% of national law cohorts and future clerks of supreme courts.\n\n📊 ADVANCED CRITERIA\n• Scholarly Intention: Heavily favors candidates explicitly aiming for careers in legal academia, international human rights tribunals, or constitutional design.\n• Language Mastery: Flawless, highly sophisticated command of philosophical and technical legal English.",
     process: "Compass TIMELINE\n• Strict Window: Applications open in September and close decisively on December 1st via the central LSAC platform.\n• Peerless Selection: Does not operate on a rolling basis; the entire global applicant pool is evaluated comprehensively in a single high-stakes cycle.",
     logistics: "💰 NEED-BLIND & FELLOWSHIP POOLS\n• Financial Commitment: Yale operates a world-leading financial aid system, meeting 100% of demonstrated financial need with direct institutional grants.\n• Academic Endowments: Direct access to specialized post-graduate fellowships for international public interest law and international governance.\n\n✈️ THE IVY RECLUSION\n• Environment: A tight-knit, ultra-intellectual Gothic campus environment in New Haven. Unmatched peer-to-peer networking with the world's future leading legal minds."
-  }
+  },
+  {
+    name: "University of Amsterdam (UvA)",
+    locationName: "Amsterdam, Netherlands",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [52.3622, 4.9122],
+    shortInfo: "European Climate Law Innovator • Roeterseiland Campus • Premier European destination for international climate litigation, ocean governance, and sustainable EU trade policies.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) in Public International Law - track Environment and Climate Change.\n• Academic Alignment: Strong legal foundation (LL.B.) with an excellent track record in environmental law, European law, or administrative law fields.\n\n📊 METRICS\n• Litigation Focus: Tailored for lawyers interested in the rapidly growing field of international climate court cases and corporate environmental liability.\n• Language Standard: High academic standard required (TOEFL 100 / IELTS 7.0 minimum).",
+    process: "🧭 EUROPEAN INTAKE PIPELINE\n• Target Windows: Processed via the centralized Dutch Studielink portal and the UvA admissions desk starting in October.\n• International Cut-off: Non-EU/EEA applicants must submit their full dossier before January 15th for scholarship integration.",
+    logistics: "💰 DUTCH MERIT POOLS\n• AMS (Amsterdam Merit Scholarship): Highly competitive full or partial tuition grants targeting outstanding non-EU postgraduate talents.\n• Orange Tulip & Holland Scholarships: Excellent eligibility pathways for external international funding networks.\n\n✈️ PROGRESSIVE METROPOLIS\n• Strategic Base: Located on the modern Roeterseiland Campus in Amsterdam. Immediate proximity to international environmental NGOs, corporate sustainability headquarters, and European regulatory hubs."
+  },
+  {
+    name: "UCL (University College London)",
+    locationName: "London, United Kingdom",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [51.5246, -0.1340],
+    shortInfo: "Global Research Titan • Bloomsbury Campus • World-renowned Bentham House faculty offering elite training in international environmental law and global commercial arbitration.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) with specialized routes in Environmental Law and Policy or Public International Law.\n• Academic Profile: First-class or very high upper-second-class law degree from a globally recognized university.\n\n📊 COMPETENCY MATRIX\n• Analytical Depth: Demands exceptional legal writing skills and the ability to critique complex multilateral treaty designs under pressure.\n• Language Barrier: Strict, high-level technical English requirement (IELTS 7.5 minimum with no element below 7.0).",
+    process: "🧭 SELECTIVE LONDON WINDOW\n• Rolling Track: Applications open in October via the central UCL Postgraduate Portal. The program closes progressively as the global cohort capacity is reached.\n• Submission Strategy: Submitting before Christmas is highly recommended for optimal college and grant matching.",
+    logistics: "💰 COMMONWEALTH & INSTITUTIONAL AID\n• UCL Graduate Scholarships: Competitive merit-based partial tuition waivers accessible for international applicants.\n• Chevening Pipelines: Full eligibility for the UK government's flagship global scholarship program covering entire tuition and maintenance.\n\n✈️ BLOOMSBURY ECOSYSTEM\n• Location Advantage: Situated in the historic academic heart of London (Bloomsbury). Direct pedestrian access to the British Library, international legal practices, and major environmental law networks."
+  },
 ];
