@@ -703,4 +703,15 @@ const locations = [
     process: "🧭 BONN RADAR\n• Entry Vector: Vacancies for Legal Officers, Research Assistants, and Project Consultants are published directly via the IUCN HR portal.\n• Milestones: Analytical screening of research credentials followed by a technical legal framework assessment.",
     logistics: "💰 GERMAN COMPLIANCE & BALANCE\n• Financial Package: German employment contract subject to local taxation, providing full national social security benefits.\n• Work-Life Balance: Exceptional. Protected public service working hours, zero weekend pressure, and highly flexible hybrid models based in the immediate vicinity of the Bonn UN Campus."
   },
+  {
+    name: "WWF International (Global Climate & Energy Practice)",
+    locationName: "Gland, Switzerland",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [46.4161, 6.2704],
+    shortInfo: "Peak Environmental Advocacy • Gland HQ • Shaping multilateral climate policy and global energy transition advocacy. High appreciation for Global South legal insight. Great flexible culture.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Corporate renewable energy targets, international climate diplomacy (UNFCCC advocacy), and plastic pollution treaties.\n• Bar Exam Status: Her nepalesisches Bar-Exam is an absolute asset. WWF heavily focuses on community-based conservation and sustainable development frameworks in South Asia.\n• Profile: Demands a passionate, proactive legal mind with an elite LL.M. and excellent intercultural communication skills.",
+    process: "🧭 SWISS NGO RADAR\n• Entry Vector: Global positions are centralized on the WWF International Careers page. Frequent openings for Policy Managers and Legal Analysts.\n• Evaluation: Focuses on mission alignment, strategic thinking, and advocacy experience.",
+    logistics: "💰 SWISS STANDARDS & WELL-BEING\n• Financial Package: Standard Swiss contract subject to local taxes. Very competitive within the international NGO space.\n• Work-Life Balance: Highly progressive. Strong institutional emphasis on mental health, fixed weekly hours (approx. 40h), and excellent remote-work mechanisms."
+  }
 ];
