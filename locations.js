@@ -713,5 +713,16 @@ const locations = [
     requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Corporate renewable energy targets, international climate diplomacy (UNFCCC advocacy), and plastic pollution treaties.\n• Bar Exam Status: Her nepalesisches Bar-Exam is an absolute asset. WWF heavily focuses on community-based conservation and sustainable development frameworks in South Asia.\n• Profile: Demands a passionate, proactive legal mind with an elite LL.M. and excellent intercultural communication skills.",
     process: "🧭 SWISS NGO RADAR\n• Entry Vector: Global positions are centralized on the WWF International Careers page. Frequent openings for Policy Managers and Legal Analysts.\n• Evaluation: Focuses on mission alignment, strategic thinking, and advocacy experience.",
     logistics: "💰 SWISS STANDARDS & WELL-BEING\n• Financial Package: Standard Swiss contract subject to local taxes. Very competitive within the international NGO space.\n• Work-Life Balance: Highly progressive. Strong institutional emphasis on mental health, fixed weekly hours (approx. 40h), and excellent remote-work mechanisms."
+  },
+  {
+    name: "World Resources Institute (WRI Europe)",
+    locationName: "The Hague, Netherlands",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [52.0814, 4.3242],
+    shortInfo: "Elite Global Research Institute • The Hague Office • Transforming legal and economic data into practical climate action. High-tier policy modeling and outstanding European WLB.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Climate resilience, international forest governance, and tracking sustainable ocean economics.\n• Bar Exam Status: No Western bar required. The focus lies completely on high-level legal research, data translation, and drafting policy recommendations for international coalitions.\n• Profile: Ideal for an interdisciplinary legal analyst comfortable with combining legal texts with socio-economic data.",
+    process: "🧭 DUTCH HIGH-IMPACT RADAR\n• Entry Vector: Handled via the global WRI Job Board. Regular openings for Research Associates and Legal Policy Officers.\n• Milestones: Involves a comprehensive data/policy interpretation test and a technical review panel.",
+    logistics: "💰 EUROPEAN THINK-TANK LIFE\n• Financial Package: Dutch employment contract subject to national taxes, featuring excellent professional growth budgets.\n• Work-Life Balance: Superb. Highly predictable, structured project environments, standard 38-40 hour weeks, and a deeply collaborative, flat-hierarchy atmosphere."
   }
 ];
