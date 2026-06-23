@@ -691,5 +691,16 @@ const locations = [
     requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: UK environmental governance, trans-boundary climate policy, and sustainable trade relations.\n• Bar Exam Status: Fully accessible with a recognized national bar (Nepal) combined with an international elite LL.M.\n• Profile: Demands deep legal writing skills, fluency in English, and strong capabilities in comparative legislative research.",
     process: "🧭 LONDON RADAR\n• Entry Vector: Vacancies are managed via the dedicated ieep.uk career desk, primarily hiring Research Fellows and Policy Officers.\n• Evaluation: Focuses on non-profit drive, academic rigor, and analytical clarity regarding global environmental challenges.",
     logistics: "💰 UK NGO STANDARDS\n• Financial Package: UK contract fully subject to national income tax, registered with the Charity Commission.\n• Work-Life Balance: Exceptional. Operates on a highly supportive civil-society culture with strict limits on weekly hours (approx. 35-37.5h). Strong institutional protection against burnout and highly flexible hybrid models."
-  }
+  },
+  {
+    name: "IUCN Environmental Law Centre (ELC)",
+    locationName: "Bonn, Germany",
+    category: "career",
+    taxAdvantage: false,
+    coordinates: [50.7169, 7.1201],
+    shortInfo: "The Global Environmental Law Authority • Bonn Office • The world's oldest and largest global environmental network. Unrivaled repository for treaty design. Perfect geographic match for Bonn-centered planning.",
+    requirements: "⚖️ STRATEGIC SPECIALIZATION\n• Domain Focus: Developing the IUCN Red List of Ecosystems, international species conservation treaties, and nature-based solutions.\n• Bar Exam Status: Fully open to non-EU qualifications (Nepal). The work is strictly non-litigious, focusing on comparative law, legal database management (ECOLEX), and global policy consulting.\n• Profile: Requires a strong academic foundation in international biodiversity or maritime law.",
+    process: "🧭 BONN RADAR\n• Entry Vector: Vacancies for Legal Officers, Research Assistants, and Project Consultants are published directly via the IUCN HR portal.\n• Milestones: Analytical screening of research credentials followed by a technical legal framework assessment.",
+    logistics: "💰 GERMAN COMPLIANCE & BALANCE\n• Financial Package: German employment contract subject to local taxation, providing full national social security benefits.\n• Work-Life Balance: Exceptional. Protected public service working hours, zero weekend pressure, and highly flexible hybrid models based in the immediate vicinity of the Bonn UN Campus."
+  },
 ];
