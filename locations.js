@@ -306,5 +306,16 @@ const locations = [
     requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in Global Environment and Climate Change Law.\n• Academic Standard: UK upper-second-class honors degree (2:1) or international equivalent in law with strong components in public law.\n\n📊 PROFILE COMPASS\n• Structural Mindset: Focuses heavily on the interplay between international climate governance (UNFCCC), international trade, and local administrative enforcement mechanisms.\n• Language Standard: High academic standard required (IELTS 7.0 minimum with no band below 6.5).",
     process: "🧭 ROLLING UK ADMISSIONS\n• Strategy Vector: Operates on a rolling admissions track opening in October. Early submission by January/February is strongly recommended due to high international demand.\n• Portal Interface: Handled directly through the university's centralized 'EUCLID' online system.",
     logistics: "💰 SCOTTISH & COMMONWEALTH GRANTS\n• Edinburgh Global Scholarships: Competitive merit-based partial tuition waivers accessible for outstanding international applicants.\n• Chevening & Great Scholarships: Direct institutional partnerships with the British Council providing full-tuition tracks for selected international legal profiles.\n\n✈️ HISTORIC CAPITAL STAGE\n• Strategic Base: Located in the historic Old Town of Edinburgh. Combines an inspiring, culturally rich environment with direct access to the Scottish Parliament, major European energy transition think tanks, and green finance networks."
+  },
+  {
+    name: "Yale Law School",
+    locationName: "New Haven, Connecticut, USA",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [41.3112, -72.9284],
+    shortInfo: "The Pinnacle of Legal Theory • New Haven Campus • Consistently ranked #1 in the US; elite doctoral and master's tracks tailored for future international judges and global legal scholars.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) — intensely individualized and strictly limited to around 25-30 exceptional students worldwide per year.\n• Academic Supertier: Demands a flawless academic record, typically targeting the absolute top 1-2% of national law cohorts and future clerks of supreme courts.\n\n📊 ADVANCED CRITERIA\n• Scholarly Intention: Heavily favors candidates explicitly aiming for careers in legal academia, international human rights tribunals, or constitutional design.\n• Language Mastery: Flawless, highly sophisticated command of philosophical and technical legal English.",
+    process: "Compass TIMELINE\n• Strict Window: Applications open in September and close decisively on December 1st via the central LSAC platform.\n• Peerless Selection: Does not operate on a rolling basis; the entire global applicant pool is evaluated comprehensively in a single high-stakes cycle.",
+    logistics: "💰 NEED-BLIND & FELLOWSHIP POOLS\n• Financial Commitment: Yale operates a world-leading financial aid system, meeting 100% of demonstrated financial need with direct institutional grants.\n• Academic Endowments: Direct access to specialized post-graduate fellowships for international public interest law and international governance.\n\n✈️ THE IVY RECLUSION\n• Environment: A tight-knit, ultra-intellectual Gothic campus environment in New Haven. Unmatched peer-to-peer networking with the world's future leading legal minds."
   }
 ];
