@@ -405,5 +405,71 @@ const locations = [
     requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in European Law or International Business Law (administered via Assas International).\n• Profile Blueprint: Holds a high-ranking foundational degree in law (LL.B. or equivalent) with exceptional marks in European or international public law modules.\n\n📊 COMPLIANCE METRICS\n• Language Asset: The program is taught entirely in English (TOEFL 100 or IELTS 7.0 minimum). French language tracks are available as an additive option.\n• Analytical Prowess: Requires strong competencies in comparative legal systems and transnational corporate structures.",
     process: "🧭 SELECTION DOSSIER\n• Assessment Route: Highly competitive dossier review process based on academic transcripts, motivation files, and professional reference reviews.\n• Interview Vector: Shortlisted candidates may undergo an intensive panel interview to determine final cohort confirmation.\n\n📅 TIMELINE\n• Core Windows: Applications open in early winter with key selection rounds finalizing through March and April.",
     logistics: "💰 CONTINENTAL PRESTIGE NETWORKS\n• Institutional Tracks: Direct access to European double-degree agreements, specialized research institutes, and elite network mentorship pools.\n• Alumnic Leverage: Join an elite global network of over 100,000 legal alumni occupying premier positions in multilateral agencies and supreme courts.\n\n✈:// THE LATIN QUARTER\n• Campus Hub: Based in the historic core of legal Paris (Rue d'Assas and Rue Saint-Guillaume). Immediate proximity to the French supreme courts, international arbitration chambers, and European policy circles."
+  },
+  {
+    name: "National University of Singapore (NUS Law)",
+    locationName: "Singapore",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [1.3184, 103.8172],
+    shortInfo: "Asia's Unrivaled Legal Super-Hub • Bukit Timah Campus • The premier bridge between Western legal frameworks and rapid Asian development governance, specializing in international law and maritime law.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) in International & Comparative Law or Maritime Law.\n• Academic Standard: Top-tier law graduation metrics (typically first-class or high upper-second honors) from an accredited international university.\n\n📊 STRATEGIC ALIGNMENT\n• Geopolitical Edge: Perfect for talents looking to interface with Asian infrastructure investment, regional dispute resolution, and international trade law.\n• Language Asset: Advanced academic English proficiency (TOEFL 100 / IELTS 7.0 minimum required).",
+    process: "🧭 PAN-ASIAN APPLICATIONS\n• Target Intake: Applications open annually in October and close strictly in early December for the subsequent August intake.\n• Portal Interface: Handled directly through the dedicated NUS Law electronic postgraduate portal.",
+    logistics: "💰 ASIAN DEVELOPMENT & MERIT FUNDS\n• NUS Graduate Scholarships: Automatic review for prestigious university-wide merit awards covering full tuition fees for outstanding international scholars.\n• ASEAN & Regional Fellowships: Specialized funding tracks for legal profiles targeting development and cooperation in the Asia-Pacific sector.\n\n✈️ THE TROPICAL HUB\n• Environment: Located on the beautiful, historic Bukit Timah Campus adjacent to the Botanic Gardens. Singapore acts as the premier global legal and financial hub of Asia, offering unmatched networking with international arbitration centers and regional development banks."
+  },
+  {
+    name: "Utrecht University (School of Law)",
+    locationName: "Utrecht, Netherlands",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [52.0931, 5.1213],
+    shortInfo: "Core Hub for Law of the Sea • Janskerkhof Campus • Home to the famous Netherlands Institute for the Law of the Sea (NILOS) and top-tier EU environmental law research.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in Public International Law (with specialized tracks in Oceans, Sustainability & Environment).\n• Profile Baseline: High-quality Bachelor of Laws (LL.B.) with proven academic focus on international public law or European institutional frameworks.\n\n📊 REQUISITES\n• Methodological Skills: Requires strong capacities for independent legal research and interdisciplinary policy analysis.\n• Language Asset: Advanced academic English competency (TOEFL 100 / IELTS 7.0 minimum).",
+    process: "🧭 STUDIELINK PIPELINE\n• System Vector: Managed via the Dutch central Studielink portal and the Utrecht OSIRIS application system.\n• Strict Windows: Applications open in October. The hard cut-off for international non-EU/EEA students seeking scholarships is strictly January 15th.",
+    logistics: "💰 PRESTIGE FELLOWSHIPS\n• Utrecht Excellence Scholarship: Highly competitive funding pool covering full tuition fees and a substantial living stipend for outstanding non-EU/EEA talents.\n• Academic Synergies: Immediate integration into expert workshops hosted by NILOS and the Utrecht Centre for Water, Oceans and Sustainability Law.\n\n✈️ THE JANSKERKHOF QUARTER\n• Campus Hub: Located in beautiful historic buildings in the heart of Utrecht. Excellent domestic transit links, putting the legal capital of The Hague just a short train ride away."
+  },
+  {
+    name: "University of Toronto (Faculty of Law)",
+    locationName: "Toronto, Canada",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [43.6629, -79.3957],
+    shortInfo: "Canada's Premier Law Faculty • Flavelle House Campus • Exceptional international reputation for legal theory, global administrative governance, and environmental law.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) — academic thesis-intensive track or coursework track with specialized focus options.\n• Selection Metric: Intensely selective cohort; strictly targets candidates with outstanding legal qualifications (top 5-10% of their graduation class).\n\n📊 COMPETENCY MATRIX\n• Research Independence: Requires a highly advanced, original research proposal for the master's thesis during the intake evaluation.\n• Language Mastery: Superior linguistic requirements (TOEFL 100 or IELTS 7.5 minimum).",
+    process: "🧭 CANADIAN INTAKE VECTOR\n• Deadlines: Applications open in early autumn and close decisively around mid-December for international postgraduate pools.\n• Portal Route: Handled directly through the University of Toronto School of Graduate Studies electronic portal system.",
+    logistics: "💰 FELLOWSHIPS & TA OPPORTUNITIES\n• Graduate Fellowships: Automatic merit-based partial tuition waivers alongside specialized financial assistance awards for global legal talents.\n• Research/Teaching Assistantships: Internal university employment pathways to offset international living costs.\n\n✈️ COSMOPOLITAN ECONOMIC HUB\n• Strategic Base: Based at the stunning Flavelle House campus in downtown Toronto. Unmatched proximity to Canada's supreme legal infrastructure, global financial corporations, and dynamic environmental policy networks."
+  },
+  {
+    name: "University of Pennsylvania (Penn Carey Law)",
+    locationName: "Philadelphia, Pennsylvania, USA",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [39.9532, -75.1927],
+    shortInfo: "Elite Ivy League Cross-Disciplinary Giant • Philadelphia Campus • Renowned for its unique Wharton Business and Law Certificate (WBLC) and global human rights pathways.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) with full access to customize coursework in international environmental law and cross-border commercial compliance.\n• Academic Supertier: Demands a spectacular foundational law record from a globally recognized institution.\n\n📊 COMPASS PROFILE\n• Interdisciplinary Edge: Strongly values candidates aiming to combine hard public international law with economic, management, or institutional leadership insights.\n• Language Barrier: Superior technical English proficiency metrics (TOEFL 100 minimum required).",
+    process: "🧭 IVY SELECTION CYCLE\n• Single Track: Managed entirely via the standardized LSAC credentials platform starting in early autumn.\n• Hard Cut-Off: Priority consideration and international institutional funding applications strictly close on December 1st.",
+    logistics: "💰 MERIT FUNDS & WHARTON TRACKS\n• Human Rights Scholarships: Dedicated named fellowships for outstanding international lawyers aiming for UN, NGO, or supranational court tracks.\n• Wharton Integration: Every LL.M. student has the unique opportunity to participate in the exclusive Wharton Business and Law Certificate program.\n\n✈️ HISTORIC UNIVERSITY CITY\n• Campus Hub: A beautiful, unified urban campus in Philadelphia. Immediate geographic and strategic rail proximity to the Washington D.C. diplomatic sector and the New York UN headquarters."
+  },
+  {
+    name: "Cornell University (Cornell Law School)",
+    locationName: "Ithaca, New York, USA",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [42.4440, -76.4826],
+    shortInfo: "Ivy League Internationalist • Myron Taylor Hall Campus • Home of the prestigious Berger International Law Program with an exceptionally close-knit, high-caliber global cohort.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) in General Legal Studies with advanced concentrations in Public International Law and Sustainability.\n• Academic Standard: Elite graduation parameters matching traditional US Ivy League admissions baselines.\n\n📊 ADMISSION CRITERIA\n• Analytical Depth: Demands excellent legal writing skills and strong academic or professional recommendations from senior legal authorities.\n• Language Asset: Flawless academic English proficiency (TOEFL minimum 100 or IELTS 7.0 standard mandatory).",
+    process: "🧭 ROLLING SELECTION RADAR\n• Portal Pathway: Processed completely via the LSAC electronic platform opening in September.\n• Priority Targets: Operates on a rolling evaluation system; early submission by December or January is highly encouraged before global capacity limits are reached.",
+    logistics: "💰 MERIT AWARDS & RESEARCH STAYS\n• Cornell Graduate Fellowships: Selective merit-based institutional tuition scholarships automatically reviewed during the standard intake cycle.\n• Faculty Closeness: Famous for its exceptionally small class sizes, offering unparalleled direct research collaboration with world-leading professors.\n\n✈️ THE CHAUTAUQUA ADVANTAGE\n• Environment: Based in the stunning Gothic architecture of Myron Taylor Hall in Ithaca, New York. A peaceful, highly focused academic sanctuary surrounded by exceptional natural beauty."
+  },
+  {
+    name: "Trinity College Dublin (School of Law)",
+    locationName: "Dublin, Ireland",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [53.3438, -6.2546],
+    shortInfo: "Ireland's Historic Intellectual Center • Dublin Campus • Celebrated international curriculum focusing on comparative constitutional law, international human rights, and global climate governance.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) in International and Comparative Law or International and European Business Law.\n• Academic Profile: First-class or high upper-second-class honors degree in law (LL.B.) or national equivalent.\n\n📊 PREFERRED ASSETS\n• Policy Mindset: Highly values candidates who demonstrate a passionate, proven engagement with multilateral treaty structures or sustainable infrastructure legislation.\n• Language Standard: Absolute command of technical legal English (IELTS 7.0 minimum across all bands).",
+    process: "🧭 ROLLING CONTINENTAL PIPELINE\n• Entry Target: Managed directly via the Trinity College Dublin central applications system starting in October.\n• Strategy Vector: Early submission before January/February is vital, as international non-EU quotas fill up rapidly under rolling review.",
+    logistics: "💰 MERIT WAIVERS & EUROPEAN HEADQUARTERS\n• Global Excellence Scholarships: Prestigious partial tuition fee waivers awarded to outstanding international postgraduate talents.\n• Tech & Policy Proximity: Benefit from Ireland’s position as the primary post-Brexit English-speaking EU hub, offering unique research ties to European courts and global regulatory agencies.\n\n✈️ ANCIENT CITY CENTER\n• Campus Hub: Located on the magnificent, historic cobblestone campus in the absolute heart of Dublin, combining centuries of legal tradition with a highly vibrant, modern European metropolitan life."
   }
 ];
