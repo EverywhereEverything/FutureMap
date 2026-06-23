@@ -284,5 +284,27 @@ const locations = [
     requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in Environmental Law and Policy.\n• Cohort Selectivity: One of the most selective programs globally; strictly requires a spectacular academic record and proven leadership impact.\n\n📊 CRITERIA\n• Professional Background: Prerequisite of several years of professional legal experience in environmental agencies, international organizations, or specialized firms.\n• Language Mastery: Flawless academic and professional English proficiency (TOEFL 100 minimum required).",
     process: "🧭 DEADLINE VECTOR\n• Single Window: Applications open in September and close strictly in early December.\n• Central Portal: Handled completely via the LSAC electronic platform, including rigorous credentials evaluation.",
     logistics: "💰 FELLOWSHIPS & GRANTS\n• Knight-Hennessy Scholars: Access to the university-wide, fully-funded leadership program covering entire tuition, living stipends, and travel grants.\n• Graduate Financial Aid: Direct, competitive merit-based fellowships adjusted via institutional law school funds.\n\n✈️ THE SILICON VALLEY HUB\n• Environment: Located on the historic Stanford campus in the heart of Northern California's innovation ecosystem. Combines intense, high-level research with unique access to global tech and climate solution task forces."
+  },
+  {
+    name: "University of Melbourne (Melbourne Law School)",
+    locationName: "Melbourne, Australia",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [-37.7983, 144.9610],
+    shortInfo: "Asia-Pacific Law Pioneer • Melbourne Campus • Highly renowned for its cutting-edge global climate change law, energy transition regulation, and maritime law specializations.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) with an official concentration or extensive coursework in Climate Change Law or Energy and Resources Law.\n• Academic Alignment: Top-tier law degree (LL.B. or State Exam) with strong quantitative or analytical achievements in administrative and international legal fields.\n\n📊 ADVANCED ASSETS\n• Regional Focus: Ideal for talents looking to interface between Western legal frameworks and rapidly growing Asian administrative and financial systems.\n• English Metric: High standard technical legal English required (IELTS 7.0 minimum).",
+    process: "🧭 FLEXIBLE INTAKE CYCLES\n• Dual Windows: Offers unique admissions flexibility with intakes starting in both Semester 1 (February) and Semester 2 (July).\n• Application Process: Handled directly through the Melbourne Law School online application portal or certified regional representatives.",
+    logistics: "💰 MERIT ENDOWMENTS\n• MLS Excellence Scholarships: Automatic assessment for partial to full tuition fee remissions based on academic merit upon application submission.\n• Rotary & Commonwealth Grants: Excellent eligibility pathways for external international funding networks.\n\n✈️ METROPOLITAN LIVABILITY\n• Campus Hub: Located in Carlton, Melbourne—consistently ranked among the world's most livable cities. Strong, progressive climate action network and direct professional connections to the Asia-Pacific regional headquarters."
+  },
+  {
+    name: "University of Edinburgh",
+    locationName: "Edinburgh, United Kingdom",
+    category: "university",
+    taxAdvantage: false,
+    coordinates: [55.9469, -3.1892],
+    shortInfo: "Global Climate Law Hub • Edinburgh Campus • Deeply integrated with the Edinburgh Centre for Constitutional Law, offering premier training in global environmental politics and energy transition law.",
+    requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: LL.M. in Global Environment and Climate Change Law.\n• Academic Standard: UK upper-second-class honors degree (2:1) or international equivalent in law with strong components in public law.\n\n📊 PROFILE COMPASS\n• Structural Mindset: Focuses heavily on the interplay between international climate governance (UNFCCC), international trade, and local administrative enforcement mechanisms.\n• Language Standard: High academic standard required (IELTS 7.0 minimum with no band below 6.5).",
+    process: "🧭 ROLLING UK ADMISSIONS\n• Strategy Vector: Operates on a rolling admissions track opening in October. Early submission by January/February is strongly recommended due to high international demand.\n• Portal Interface: Handled directly through the university's centralized 'EUCLID' online system.",
+    logistics: "💰 SCOTTISH & COMMONWEALTH GRANTS\n• Edinburgh Global Scholarships: Competitive merit-based partial tuition waivers accessible for outstanding international applicants.\n• Chevening & Great Scholarships: Direct institutional partnerships with the British Council providing full-tuition tracks for selected international legal profiles.\n\n✈️ HISTORIC CAPITAL STAGE\n• Strategic Base: Located in the historic Old Town of Edinburgh. Combines an inspiring, culturally rich environment with direct access to the Scottish Parliament, major European energy transition think tanks, and green finance networks."
   }
 ];
