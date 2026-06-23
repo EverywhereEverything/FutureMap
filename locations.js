@@ -471,5 +471,16 @@ const locations = [
     requirements: "🎓 PROGRAM FOCUS\n• Degree Tier: Master of Laws (LL.M.) in International and Comparative Law or International and European Business Law.\n• Academic Profile: First-class or high upper-second-class honors degree in law (LL.B.) or national equivalent.\n\n📊 PREFERRED ASSETS\n• Policy Mindset: Highly values candidates who demonstrate a passionate, proven engagement with multilateral treaty structures or sustainable infrastructure legislation.\n• Language Standard: Absolute command of technical legal English (IELTS 7.0 minimum across all bands).",
     process: "🧭 ROLLING CONTINENTAL PIPELINE\n• Entry Target: Managed directly via the Trinity College Dublin central applications system starting in October.\n• Strategy Vector: Early submission before January/February is vital, as international non-EU quotas fill up rapidly under rolling review.",
     logistics: "💰 MERIT WAIVERS & EUROPEAN HEADQUARTERS\n• Global Excellence Scholarships: Prestigious partial tuition fee waivers awarded to outstanding international postgraduate talents.\n• Tech & Policy Proximity: Benefit from Ireland’s position as the primary post-Brexit English-speaking EU hub, offering unique research ties to European courts and global regulatory agencies.\n\n✈️ ANCIENT CITY CENTER\n• Campus Hub: Located on the magnificent, historic cobblestone campus in the absolute heart of Dublin, combining centuries of legal tradition with a highly vibrant, modern European metropolitan life."
-  }
+  },
+  {
+    name: "International Labour Organization (ILO)",
+    locationName: "Geneva, Switzerland",
+    category: "career",
+    taxAdvantage: true,
+    coordinates: [46.2255, 6.1339],
+    shortInfo: "Global Labor Standards Authority • Geneva HQ • Notorious for practicing what they preach: world-class work-life balance, strict flexitime tracking, and tax-free UN salaries.",
+    requirements: "⚖️ LEGAL ROLES & FIELDS\n• Key Departments: Office of the Legal Adviser (JUR), International Labour Standards Department.\n• Practice Areas: Drafting international conventions, human rights at work, constitutional law of international organizations.\n\n📊 COMPETENCY METRICS\n• Academic Baseline: Advanced law degree (Master/LL.M.) with excellent marks in public international law.\n• Language Asset: Bilingual fluency in English and either French or Spanish is highly critical for core UN career tracks.",
+    process: "🧭 ENTRY PIPELINES\n• Main Portals: Centralized recruitment via the ILO Jobs platform. Highly renowned for its structured Junior Professional Officer (JPO) sponsorships.\n• Assessment Vector: Strict multi-stage evaluation comprising anonymous technical legal writing tests followed by structured competency-based panel interviews.",
+    logistics: "💰 PRIVILEGES & BALANCE\n• Financial Package: Full UN salary scale (P-grade) completely exempt from national income tax, paired with generous post adjustments for Geneva.\n• Work-Life Balance: Exceptional. Rigid electronic flexitime tracking where every hour of overtime is systematically converted into additional leave days. Highly family-friendly infrastructure."
+  },
 ];
