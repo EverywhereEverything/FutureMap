@@ -424,13 +424,6 @@
             
             // Text-Label im Popover live formatieren (60000 -> 60.000)
             document.getElementById('cost-label').textContent = parsedVal.toLocaleString('de-DE');
-
-            if (parsedVal < 60000 && currentFilters.category === 'all') {
-        changeCategoryFilter('university'); // Schaltet den Tab um und ruft bereits renderMarkers() auf
-    } else {
-        renderMarkers(); // Normales Update, falls der Tab eh schon auf Uni steht
-    }
-}
             
             // Filter live auf Karte und offene Listen anwenden
             renderMarkers();
