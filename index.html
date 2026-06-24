@@ -109,7 +109,7 @@
         <div id="filter-popover" class="hidden w-full bg-gray-900/85 backdrop-blur-xl p-4 rounded-2xl border border-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col gap-3 animate-textFadeIn">
             <h4 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 border-b border-gray-800/60 pb-1.5">Zusatzfilter</h4>
             
-            <label class="flex items-center gap-2.5 cursor-pointer select-none group">
+            <label id="tax-wrapper" class="flex items-center gap-2.5 cursor-pointer select-none group">
                 <input type="checkbox" id="check-tax" onchange="toggleTaxFilter(this.checked)" class="sr-only peer">
                 <div class="w-4 h-4 rounded border border-gray-600 bg-gray-950 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 flex items-center justify-center transition-all duration-150 group-hover:border-gray-400">
                     <svg class="w-3 h-3 text-gray-950 stroke-[3.5] hidden peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
@@ -395,24 +395,33 @@
             });
         }
 
-      function changeCategoryFilter(category) {
+     function changeCategoryFilter(category) {
             currentFilters.category = category; 
             
-            // === NEU: SLIDER EIN- ODER AUSBLENDEN ===
             const tuitionWrapper = document.getElementById('tuition-wrapper');
-            if (tuitionWrapper) {
-                if (category === 'university') {
-                    tuitionWrapper.classList.remove('hidden'); // Zeigen bei Unis
-                } else {
-                    tuitionWrapper.classList.add('hidden');    // Verstecken bei All & Career
-                    
-                    // Filter im Hintergrund zurücksetzen, wenn man den Tab verlässt
-                    currentFilters.maxTuition = 60000;
-                    const slider = document.getElementById('cost-slider');
-                    if (slider) slider.value = 60000;
-                    const label = document.getElementById('cost-label');
-                    if (label) label.textContent = "60.000";
-                }
+            const taxWrapper = document.getElementById('tax-wrapper');
+            const taxCheckbox = document.getElementById('check-tax');
+            
+            // === INTELLIGENTES FILTER-ROUTING ===
+            if (category === 'university') {
+                // Bei Unis: Zeige Kosten, verstecke Steuern
+                if (tuitionWrapper) tuitionWrapper.classList.remove('hidden');
+                if (taxWrapper) taxWrapper.classList.add('hidden');
+                
+                // Steuerfilter im Hintergrund sauber zurücksetzen
+                currentFilters.taxAdvantage = false;
+                if (taxCheckbox) taxCheckbox.checked = false;
+            } else {
+                // Bei All & Career: Verstecke Kosten, zeige Steuern
+                if (tuitionWrapper) tuitionWrapper.classList.add('hidden');
+                if (taxWrapper) taxWrapper.classList.remove('hidden');
+                
+                // Kosten-Slider im Hintergrund zurücksetzen
+                currentFilters.maxTuition = 60000;
+                const slider = document.getElementById('cost-slider');
+                if (slider) slider.value = 60000;
+                const label = document.getElementById('cost-label');
+                if (label) label.textContent = "60.000";
             }
             // =========================================
             
