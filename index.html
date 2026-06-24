@@ -256,15 +256,19 @@
         // ==========================================
         // DIE DYNAMISCHE LANDES-ÜBERSICHTSMASCHINE
         // ==========================================
-        function showCountryOverview(countryName) {
+       function showCountryOverview(countryName) {
             let searchName = countryName.toLowerCase();
             if (searchName.includes("united states")) searchName = "usa";
 
             const countryLocations = locations.filter(loc => {
                 const matchesCountry = loc.locationName.toLowerCase().includes(searchName);
                 const matchesCategory = currentFilters.category === 'all' || loc.category === currentFilters.category;
-                const matchesTax = !currentFilters.taxAdvantage || loc.taxAdvantage;
-                const matchesCost = loc.category !== 'university' || !loc.tuitionFee || loc.tuitionFee <= currentFilters.maxTuition;
+                
+                // AUCH HIER: Typensicherer Check für die Liste
+                const isTaxFree = loc.taxAdvantage === true || loc.taxAdvantage === 'true';
+                const matchesTax = !currentFilters.taxAdvantage || isTaxFree;
+                
+                const matchesCost = loc.category !== 'university' || !loc.tuitionFee || Number(loc.tuitionFee) <= currentFilters.maxTuition;
                 
                 const matchesSearch = !currentFilters.searchQuery || 
                     loc.name.toLowerCase().includes(currentFilters.searchQuery.toLowerCase()) ||
@@ -330,23 +334,28 @@
         // ==========================================
         // DYNAMISCHE MATRIX-FILTER LOGIK (MASTER-FILTER)
         // ==========================================
-        function renderMarkers() {
+       function renderMarkers() {
             activeMarkers.forEach(marker => map.removeLayer(marker));
             activeMarkers = [];
 
             locations.forEach(loc => {
+                // 1. Filter: Kategorie
                 if (currentFilters.category !== 'all' && loc.category !== currentFilters.category) {
                     return; 
                 }
 
-                if (currentFilters.taxAdvantage && !loc.taxAdvantage) {
+                // 2. Filter: Steuerfreie Gehälter (Absolut typensicher gegen Strings geschützt)
+                const isTaxFree = loc.taxAdvantage === true || loc.taxAdvantage === 'true';
+                if (currentFilters.taxAdvantage && !isTaxFree) {
                     return; 
                 }
 
-                if (loc.category === 'university' && loc.tuitionFee && loc.tuitionFee > currentFilters.maxTuition) {
+                // 3. Filter: Kosten-Slider (Zusätzlich mit Number() gegen String-Preise abgesichert)
+                if (loc.category === 'university' && loc.tuitionFee && Number(loc.tuitionFee) > currentFilters.maxTuition) {
                     return; 
                 }
 
+                // 4. Filter: Suchfeld-Eingabe
                 if (currentFilters.searchQuery) {
                     const query = currentFilters.searchQuery.toLowerCase();
                     const inName = loc.name.toLowerCase().includes(query);
@@ -357,6 +366,7 @@
                     }
                 }
 
+                // --- AB HIER WIRD DER MARKER GEZEICHNET ---
                 const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
                 const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
                 
@@ -424,12 +434,6 @@
             }
 
             closeSidebar(); 
-            renderMarkers(); 
-        }
-
-        function toggleTaxFilter(isChecked) {
-            currentFilters.taxAdvantage = isChecked; 
-            closeSidebar();
             renderMarkers(); 
         }
 
@@ -862,7 +866,13 @@
             sidebar.style.pointerEvents = 'none';
             sidebar.style.display = 'none';
         }
-
+        
+document.getElementById('check-tax').addEventListener('change', function(e) {
+                 currentFilters.taxAdvantage = e.target.checked; 
+                 closeSidebar();
+                 renderMarkers(); 
+             });
+        
         renderMarkers();
         
         window.addEventListener('resize', () => {
