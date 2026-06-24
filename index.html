@@ -352,6 +352,10 @@
                 if (loc.category === 'university' && loc.tuitionFee && loc.tuitionFee > currentFilters.maxTuition) {
                     return; 
                 }
+               
+                if (loc.category === 'career' && currentFilters.maxTuition < 60000) {
+                    return; 
+                }
 
                 if (currentFilters.searchQuery) {
                     const query = currentFilters.searchQuery.toLowerCase();
