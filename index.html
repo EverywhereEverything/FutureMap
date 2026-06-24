@@ -116,6 +116,23 @@
                 </div>
                 <span class="text-xs font-medium text-gray-300 group-hover:text-white transition duration-150">💰 Tax-free Salaries</span>
             </label>
+
+            <div class="flex flex-col gap-1.5 mt-1 border-t border-gray-800/40 pt-2.5">
+                <div class="flex justify-between items-center text-xs font-medium text-gray-300">
+                    <span class="flex items-center gap-1">🎓 Max. Tuition:</span>
+                    <span class="text-blue-400 font-semibold"><span id="cost-label">60.000</span> €</span>
+                </div>
+                <input 
+                    type="range" 
+                    id="cost-slider" 
+                    min="0" 
+                    max="60000" 
+                    step="1000" 
+                    value="60000" 
+                    oninput="handleCostSlider(this.value)" 
+                    class="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-blue-500 focus:outline-none"
+                >
+            </div>
         </div>
     </div>
 
@@ -164,10 +181,11 @@
         let mobileState = 'closed';
         let currentTranslateY = window.innerHeight + 200;
 
-     const currentFilters = {
+        const currentFilters = {
             category: 'all',
             taxAdvantage: false,
-            searchQuery: '' // NEU: Speichert das aktuelle Suchwort
+            searchQuery: '',
+            maxTuition: 60000 // NEU: Initialer Höchstpreis
         };
         
         // 1. Karte im Dunkelmodus initialisieren
@@ -245,17 +263,19 @@
             let searchName = countryName.toLowerCase();
             if (searchName.includes("united states")) searchName = "usa";
 
-          const countryLocations = locations.filter(loc => {
+            const countryLocations = locations.filter(loc => {
                 const matchesCountry = loc.locationName.toLowerCase().includes(searchName);
                 const matchesCategory = currentFilters.category === 'all' || loc.category === currentFilters.category;
                 const matchesTax = !currentFilters.taxAdvantage || loc.taxAdvantage;
                 
-                // NEU: Such-Check für die Landesliste
+                // NEU: Kosten-Check für das Submenü (Ignoriert Jobs)
+                const matchesCost = loc.category !== 'university' || !loc.tuitionFee || loc.tuitionFee <= currentFilters.maxTuition;
+                
                 const matchesSearch = !currentFilters.searchQuery || 
                     loc.name.toLowerCase().includes(currentFilters.searchQuery.toLowerCase()) ||
                     loc.locationName.toLowerCase().includes(currentFilters.searchQuery.toLowerCase());
                 
-                return matchesCountry && matchesCategory && matchesTax && matchesSearch;
+                return matchesCountry && matchesCategory && matchesTax && matchesSearch && matchesCost;
             });
 
             if (countryLocations.length === 0) {
@@ -324,9 +344,15 @@
                     return; 
                 }
 
-               if (currentFilters.taxAdvantage && !loc.taxAdvantage) {
+                if (currentFilters.taxAdvantage && !loc.taxAdvantage) {
                     return; 
                 }
+
+                // NEU: Der Kosten-Filter schlägt hier im Zentral-Filter an
+                if (loc.category === 'university' && loc.tuitionFee && loc.tuitionFee > currentFilters.maxTuition) {
+                    return; 
+                }
+
                 if (currentFilters.searchQuery) {
                     const query = currentFilters.searchQuery.toLowerCase();
                     const inName = loc.name.toLowerCase().includes(query);
@@ -385,12 +411,30 @@
             renderMarkers(); 
         }
 
-       function toggleTaxFilter(isChecked) {
+        function toggleTaxFilter(isChecked) {
             currentFilters.taxAdvantage = isChecked; 
             closeSidebar();
             renderMarkers(); 
         }
-function toggleFilterPopover() {
+
+        // NEU: Event-Maschine für den Slider-Input
+        function handleCostSlider(value) {
+            const parsedVal = parseInt(value);
+            currentFilters.maxTuition = parsedVal;
+            
+            // Text-Label im Popover live formatieren (60000 -> 60.000)
+            document.getElementById('cost-label').textContent = parsedVal.toLocaleString('de-DE');
+            
+            // Filter live auf Karte und offene Listen anwenden
+            renderMarkers();
+            if (currentSelectedLocation === null && sidebar.style.display === 'flex' && window.innerWidth >= 768) {
+                // Falls gerade eine Landesübersicht offen ist, diese live mitsortieren
+                const heading = detailsContainer.querySelector('h2');
+                if (heading) showCountryOverview(heading.textContent);
+            }
+        }
+
+        function toggleFilterPopover() {
             const popover = document.getElementById('filter-popover');
             const btn = document.getElementById('btn-toggle-popover');
             
@@ -402,7 +446,8 @@ function toggleFilterPopover() {
                 btn.classList.remove('bg-white/10', 'text-white');
             }
         }
-       function toggleSearchContainer() {
+
+        function toggleSearchContainer() {
             const searchContainer = document.getElementById('search-container');
             const btn = document.getElementById('btn-toggle-search');
             const input = document.getElementById('search-input');
@@ -423,7 +468,8 @@ function toggleFilterPopover() {
                 handleSearchInput('');
             }
         }
-function handleSearchInput(value) {
+
+        function handleSearchInput(value) {
             const query = value.trim().toLowerCase();
             currentFilters.searchQuery = value.trim();
             const suggestionsContainer = document.getElementById('search-suggestions');
@@ -438,13 +484,11 @@ function handleSearchInput(value) {
             let suggestionsHtml = '';
             let hasMatches = false;
 
-            // 1. LÄNDER-SUCHE: Extrahiert alle einzigartigen Ländernamen aus deinen Locations
             const uniqueCountries = [...new Set(locations.map(loc => {
                 const parts = loc.locationName.split(',');
                 return parts[parts.length - 1].trim();
             }))];
 
-            // Prüft, ob die Eingabe zu einem Land passt
             const matchedCountries = uniqueCountries.filter(c => c.toLowerCase().includes(query)).slice(0, 2);
             
             if (matchedCountries.length > 0) {
@@ -465,7 +509,6 @@ function handleSearchInput(value) {
                 });
             }
 
-            // 2. STATIONEN-SUCHE: Filtert die einzelnen Unis und Jobs (wie bisher)
             const matchedLocations = locations.filter(loc => 
                 loc.name.toLowerCase().includes(query) || 
                 loc.locationName.toLowerCase().includes(query)
@@ -492,7 +535,6 @@ function handleSearchInput(value) {
                 }).join('');
             }
 
-            // Ergebnisanzeige steuern
             if (!hasMatches) {
                 suggestionsContainer.innerHTML = '<div class="text-[10px] text-gray-500 px-2 py-2 italic">No targets found</div>';
                 suggestionsContainer.classList.remove('hidden');
@@ -504,7 +546,6 @@ function handleSearchInput(value) {
             renderMarkers();
         }
 
-        // Klick-Handler für Einzel-Stationen (wie bisher)
         function clickSearchSuggestion(name) {
             const loc = locations.find(l => l.name === name);
             if (loc) {
@@ -523,19 +564,14 @@ function handleSearchInput(value) {
             }
         }
 
-        // NEU: Klick-Handler für die Länder-Vorschläge (Simuliert den Karten-Klick!)
         function clickCountrySuggestion(countryName) {
             document.getElementById('search-input').value = countryName;
             currentFilters.searchQuery = countryName;
             document.getElementById('search-suggestions').classList.add('hidden');
             
-            // 1. Marker auf der Karte passend aktualisieren
             renderMarkers();
-            
-            // 2. Das Länder-Submenü in der Sidebar auffächern
             showCountryOverview(countryName);
             
-            // 3. KARTEN-ZOOM: Sucht die echten Grenzen aus dem GeoJSON und fliegt dorthin
             if (geojsonLayer) {
                 let targetLayer = null;
                 let searchName = countryName.toLowerCase();
