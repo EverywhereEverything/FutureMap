@@ -118,21 +118,21 @@
             </label>
 
             <div id="tuition-wrapper" class="hidden flex flex-col gap-1.5 mt-1 border-t border-gray-800/40 pt-2.5">
-    <div class="flex justify-between items-center text-xs font-medium text-gray-300">
-        <span class="flex items-center gap-1">🎓 Max. Tuition:</span>
-        <span class="text-blue-400 font-semibold"><span id="cost-label">60.000</span> €</span>
-    </div>
-    <input 
-        type="range" 
-        id="cost-slider" 
-        min="0" 
-        max="60000" 
-        step="1000" 
-        value="60000" 
-        oninput="handleCostSlider(this.value)" 
-        class="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-blue-500 focus:outline-none"
-    >
-</div>
+                <div class="flex justify-between items-center text-xs font-medium text-gray-300">
+                    <span class="flex items-center gap-1">🎓 Max. Tuition:</span>
+                    <span class="text-blue-400 font-semibold"><span id="cost-label">60.000</span> €</span>
+                </div>
+                <input 
+                    type="range" 
+                    id="cost-slider" 
+                    min="0" 
+                    max="60000" 
+                    step="1000" 
+                    value="60000" 
+                    oninput="handleCostSlider(this.value)" 
+                    class="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-blue-500 focus:outline-none"
+                >
+            </div>
         </div>
     </div>
 
@@ -175,7 +175,6 @@
     <script>
         const isMobile = window.innerWidth < 768;
         
-        // Globale UI- und Filter-Zustände initialisieren
         let activeMarkers = [];
         let currentSelectedLocation = null;
         let mobileState = 'closed';
@@ -185,10 +184,9 @@
             category: 'all',
             taxAdvantage: false,
             searchQuery: '',
-            maxTuition: 60000 // NEU: Initialer Höchstpreis
+            maxTuition: 60000
         };
         
-        // 1. Karte im Dunkelmodus initialisieren
         const map = L.map('map', { 
             zoomControl: false,
             attributionControl: false 
@@ -244,7 +242,6 @@
           });
         }
 
-        // GeoJSON Grenzen laden
         fetch('./countries.geo.json') 
           .then(response => response.json())
           .then(geoJsonData => {
@@ -267,8 +264,6 @@
                 const matchesCountry = loc.locationName.toLowerCase().includes(searchName);
                 const matchesCategory = currentFilters.category === 'all' || loc.category === currentFilters.category;
                 const matchesTax = !currentFilters.taxAdvantage || loc.taxAdvantage;
-                
-                // NEU: Kosten-Check für das Submenü (Ignoriert Jobs)
                 const matchesCost = loc.category !== 'university' || !loc.tuitionFee || loc.tuitionFee <= currentFilters.maxTuition;
                 
                 const matchesSearch = !currentFilters.searchQuery || 
@@ -332,39 +327,36 @@
             }
         };
 
-      function renderMarkers() {
-            // Erst alle alten Marker von der Karte löschen
+        // ==========================================
+        // DYNAMISCHE MATRIX-FILTER LOGIK (MASTER-FILTER)
+        // ==========================================
+        function renderMarkers() {
             activeMarkers.forEach(marker => map.removeLayer(marker));
             activeMarkers = [];
 
             locations.forEach(loc => {
-                // 1. Filter: Kategorie (All / Uni / Career)
                 if (currentFilters.category !== 'all' && loc.category !== currentFilters.category) {
                     return; 
                 }
 
-                // 2. Filter: Steuerfreie Gehälter
                 if (currentFilters.taxAdvantage && !loc.taxAdvantage) {
                     return; 
                 }
 
-                // 3. Filter: Kosten-Slider (Prüft NUR Unis, falls sie teurer sind als der Regler)
                 if (loc.category === 'university' && loc.tuitionFee && loc.tuitionFee > currentFilters.maxTuition) {
                     return; 
                 }
 
-                // 4. Filter: Suchfeld-Eingabe
                 if (currentFilters.searchQuery) {
                     const query = currentFilters.searchQuery.toLowerCase();
                     const inName = loc.name.toLowerCase().includes(query);
                     const inLocation = loc.locationName.toLowerCase().includes(query);
                     
                     if (!inName && !inLocation) {
-                        return; // Überspringen, wenn das Wort nirgends vorkommt
+                        return; 
                     }
                 }
 
-                // --- AB HIER WIRD DER MARKER GEZEICHNET ---
                 const innerDotColor = loc.category === 'university' ? 'bg-blue-400 shadow-[0_0_8px_#3b82f6]' : 'bg-emerald-400 shadow-[0_0_8px_#10b981]';
                 const outerRingColor = loc.category === 'university' ? 'bg-blue-500/20' : 'bg-emerald-500/20';
                 
@@ -395,35 +387,30 @@
             });
         }
 
-     function changeCategoryFilter(category) {
+        // MASTER CONTROL FOR TABS & VISIBILITY ROUTING
+        function changeCategoryFilter(category) {
             currentFilters.category = category; 
             
             const tuitionWrapper = document.getElementById('tuition-wrapper');
             const taxWrapper = document.getElementById('tax-wrapper');
             const taxCheckbox = document.getElementById('check-tax');
             
-            // === INTELLIGENTES FILTER-ROUTING ===
             if (category === 'university') {
-                // Bei Unis: Zeige Kosten, verstecke Steuern
                 if (tuitionWrapper) tuitionWrapper.classList.remove('hidden');
                 if (taxWrapper) taxWrapper.classList.add('hidden');
                 
-                // Steuerfilter im Hintergrund sauber zurücksetzen
                 currentFilters.taxAdvantage = false;
                 if (taxCheckbox) taxCheckbox.checked = false;
             } else {
-                // Bei All & Career: Verstecke Kosten, zeige Steuern
                 if (tuitionWrapper) tuitionWrapper.classList.add('hidden');
                 if (taxWrapper) taxWrapper.classList.remove('hidden');
                 
-                // Kosten-Slider im Hintergrund zurücksetzen
                 currentFilters.maxTuition = 60000;
                 const slider = document.getElementById('cost-slider');
                 if (slider) slider.value = 60000;
                 const label = document.getElementById('cost-label');
                 if (label) label.textContent = "60.000";
             }
-            // =========================================
             
             const buttons = ['all', 'university', 'career'];
             buttons.forEach(btn => {
@@ -440,18 +427,19 @@
             renderMarkers(); 
         }
 
-        // NEU: Event-Maschine für den Slider-Input
+        function toggleTaxFilter(isChecked) {
+            currentFilters.taxAdvantage = isChecked; 
+            closeSidebar();
+            renderMarkers(); 
+        }
+
         function handleCostSlider(value) {
             const parsedVal = parseInt(value);
             currentFilters.maxTuition = parsedVal;
-            
-            // Text-Label im Popover live formatieren (60000 -> 60.000)
             document.getElementById('cost-label').textContent = parsedVal.toLocaleString('de-DE');
             
-            // Filter live auf Karte und offene Listen anwenden
             renderMarkers();
             if (currentSelectedLocation === null && sidebar.style.display === 'flex' && window.innerWidth >= 768) {
-                // Falls gerade eine Landesübersicht offen ist, diese live mitsortieren
                 const heading = detailsContainer.querySelector('h2');
                 if (heading) showCountryOverview(heading.textContent);
             }
@@ -698,7 +686,6 @@
             }
         }
 
-        // TOUCH GESTEN
         let startY = 0;
         let startTranslateY = 0;
         let isDragging = false;
@@ -821,6 +808,7 @@
             }
         }
 
+        // SIDEBAR RENDERING SYSTEM
         function showDetails(loc) {
             currentSelectedLocation = loc;
             const badgeColor = loc.category === 'university' ? 'bg-blue-500/10 text-blue-400' : 'bg-emerald-500/10 text-emerald-400';
@@ -863,7 +851,6 @@
             detailsContainer.scrollTop = 0;
         }
 
-        // INITIALISIERUNG STARTEN
         if (window.innerWidth >= 768) {
             sidebar.style.transform = 'translateX(-100%)';
             sidebar.style.opacity = '1';
@@ -876,7 +863,6 @@
             sidebar.style.display = 'none';
         }
 
-        // Marker initial zeichnen
         renderMarkers();
         
         window.addEventListener('resize', () => {
